@@ -297,5 +297,44 @@ public class Function {
 
        return token;
    }
+  // Admin DB
+  public static GridView GetAllClothes(GridView gridView)
+  {
+      DataTable dt = new DataTable();
+      using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+      {
+          using (SqlCommand command = new SqlCommand("Product_CRUD", connection))
+          {
+              connection.Open();
+              command.Parameters.AddWithValue("@ACTION", "SELECT");
+              command.CommandType = CommandType.StoredProcedure;
 
+              using (SqlDataAdapter sql = new SqlDataAdapter())
+              {
+                  sql.SelectCommand = command;
+
+                  sql.Fill(dt);
+              }
+              if (dt.Rows.Count > 0)
+              {
+                  gridView.DataSource = dt;
+                  gridView.DataBind();
+                  gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
+              }
+              else
+              {
+                  dt.Rows.Add(dt.NewRow());
+                  gridView.DataSource = dt;
+                  gridView.DataBind();
+                  gridView.Rows[0].Cells.Clear();
+                  gridView.Rows[0].Cells.Add(new TableCell());
+                  gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
+                  gridView.Rows[0].Cells[0].Text = "No Clothes in Database";
+                  gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
+                  gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
+              }
+          }
+      }
+      return gridView;
+  }
 }
