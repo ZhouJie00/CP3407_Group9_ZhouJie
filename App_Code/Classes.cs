@@ -216,43 +216,49 @@ public class Account
         return account;
     }
 
-    public static GridView GetAllUsers(GridView gridView)
+    public class SecretKeys
     {
-        DataTable dt = new DataTable();
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-        {
-            using (SqlCommand command = new SqlCommand("select * from Accounts", connection))
-            {
-                connection.Open();
-
-                using (SqlDataAdapter sql = new SqlDataAdapter())
-                {
-                    sql.SelectCommand = command;
-
-                    sql.Fill(dt);
-                }
-                if (dt.Rows.Count > 0)
-                {
-                    gridView.DataSource = dt;
-                    gridView.DataBind();
-                    gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
-                }
-                else
-                {
-                    dt.Rows.Add(dt.NewRow());
-                    gridView.DataSource = dt;
-                    gridView.DataBind();
-                    gridView.Rows[0].Cells.Clear();
-                    gridView.Rows[0].Cells.Add(new TableCell());
-                    gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
-                    gridView.Rows[0].Cells[0].Text = "No Users in Database";
-                    gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                    gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
-                }
-            }
-        }
-        return gridView;
+        public string stripe_api_key { get; set; }
     }
-
- 
 }
+
+public class SecretKeys
+{
+    public string stripe_api_key { get; set; }
+    public string google_public { get; set; }
+    public string google_secret { get; set; }
+    public string ipify { get; set; }
+}
+
+public static GridView GetAllUsers(GridView gridView)
+{
+    DataTable dt = new DataTable();
+    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+    {
+        using (SqlCommand command = new SqlCommand("select * from Accounts", connection))
+        {
+            connection.Open();
+
+            using (SqlDataAdapter sql = new SqlDataAdapter())
+            {
+                sql.SelectCommand = command;
+
+                sql.Fill(dt);
+            }
+            if (dt.Rows.Count > 0)
+            {
+                gridView.DataSource = dt;
+                gridView.DataBind();
+                gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
+            }
+            else
+            {
+                dt.Rows.Add(dt.NewRow());
+                gridView.DataSource = dt;
+                gridView.DataBind();
+                gridView.Rows[0].Cells.Clear();
+                gridView.Rows[0].Cells.Add(new TableCell());
+                gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
+                gridView.Rows[0].Cells[0].Text = "No Users in Database";
+                gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
+                gridView
