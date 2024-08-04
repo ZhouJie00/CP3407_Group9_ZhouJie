@@ -257,3 +257,17 @@ public static GridView GetAllUsers(GridView gridView)
     }
     return gridView;
 }
+
+public class Function {
+    public static string GenerateRandomPassword(int size) {
+        // Create a strong random password for user
+        Random rand = new Random();
+        string possibleChars = "abcdefghijklmnopqrstuvwxyz0123456789QWERTYUIOPASDFGHJKLZXCVBNM!@#$^&*()";
+        char[] randomPassword = new char[size];
+
+        for (int i = 0; i < size; i++) {
+            randomPassword[i] = possibleChars[rand.Next(possibleChars.Length)];
+        }
+        return string.Join("", randomPassword);
+    }
+}
