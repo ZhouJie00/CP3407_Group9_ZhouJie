@@ -611,4 +611,47 @@ public class Function {
         }
         return repeater;
     }
+
+    public static int CheckIfUserExists(string email)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+
+        conn.Open();
+
+        string checkuser = "SELECT COUNT(*) FROM Accounts WHERE Email = @email";
+        SqlCommand com = new SqlCommand(checkuser, conn);
+        com.Parameters.AddWithValue("@email", email);
+
+        int temp = Convert.ToInt32(com.ExecuteScalar().ToString());
+
+        conn.Close();
+        return temp;
+    }
+    public static string GetUserPassword(string TextBox_Email)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+
+        string checkPasswordQuery = "SELECT password FROM Accounts WHERE email = @email2";
+
+        SqlCommand pwcomm = new SqlCommand(checkPasswordQuery, conn);
+        pwcomm.Parameters.AddWithValue("@email2", TextBox_Email);
+        string password = pwcomm.ExecuteScalar().ToString();
+        return password;
+        
+    }
+
+    public static string IsUserAdmin(string TextBox_Email)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+
+        string checkPasswordQuery = "SELECT isAdmin FROM Accounts WHERE email = @email2";
+
+        SqlCommand pwcomm = new SqlCommand(checkPasswordQuery, conn);
+        pwcomm.Parameters.AddWithValue("@email2", TextBox_Email);
+        string password =  pwcomm.ExecuteScalar().ToString();
+        return password;
+
+    }
 }
