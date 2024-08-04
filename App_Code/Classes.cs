@@ -716,4 +716,39 @@ public static void SetUserVerificationTrue(string email) {
      }
  }
 
+    public static int AnyResultsFromSearch(string search_input)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        string checksearch = "SELECT COUNT(*) FROM [Clothes] WHERE name LIKE @search OR overview LIKE @search";
+        SqlCommand command = new SqlCommand(checksearch, conn);
+
+        //declare @search
+        command.Parameters.AddWithValue("@search", "%" + search_input + "%");
+        //command.Parameters["@search"].Value = "%" + search_input + "%";
+
+        //use temp to create a fucntion
+        int temp = Convert.ToInt32(command.ExecuteScalar().ToString());
+
+        //close the connection
+        conn.Close();
+        return temp;
+    }
+    public static Repeater GetResultFromSearch(Repeater repeater, string search_input)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        string checksearch = "SELECT * FROM [Clothes] WHERE name LIKE @search OR overview LIKE @search";
+        SqlCommand command = new SqlCommand(checksearch, conn);
+        command.Parameters.AddWithValue("@search", "%" + search_input + "%");
+
+        SqlDataReader dataTable = command.ExecuteReader();
+        repeater.DataSource = dataTable;
+        repeater.DataBind();
+
+        //close the connection
+        conn.Close();
+
+        return repeater;
+    }
 }
