@@ -1007,4 +1007,23 @@ public static void SetUserVerificationTrue(string email) {
         }
         return gridView;
     }
+   public static GridView AdminDeleteUser(GridView gridView, int rowIndex, HttpServerUtility server)
+   {
+       try
+       {
+           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+           {
+               using (SqlCommand sql = new SqlCommand("DELETE Accounts where id = @id", connection))
+               {
+                   connection.Open();
+                   string id = gridView.DataKeys[rowIndex].Value.ToString();
+                   sql.Parameters.AddWithValue("@id", id);
+                   sql.ExecuteNonQuery();
+
+                   gridView = GetAllUsers(gridView);
+                   return gridView;
+               }
+           }
+       } catch (SqlException) { return null; }
+   }
 }
