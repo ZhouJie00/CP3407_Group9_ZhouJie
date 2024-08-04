@@ -474,4 +474,20 @@ public class Function {
        return null;
    }
    
+    public static int GetDecryptedTokenEmailFromDataBase(string decryptedToken)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+
+        conn.Open();
+
+        string checkuser = "SELECT COUNT(*) FROM Accounts WHERE Email = @email";
+        SqlCommand com = new SqlCommand(checkuser, conn);
+        string email = Encoding.ASCII.GetString(Convert.FromBase64String(decryptedToken)).Substring(8);
+        com.Parameters.AddWithValue("@email", email);
+
+        int temp = Convert.ToInt32(com.ExecuteScalar().ToString());
+
+        conn.Close();
+        return temp;
+    }
 }
