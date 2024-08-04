@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -19,9 +20,12 @@ using System.Net;
 using System.Net.Mail;
 using AjaxControlToolkit.HtmlEditor.ToolbarButtons;
 using OtpNet;
+using static QRCoder.PayloadGenerator;
 
-public class Clothes
-{
+/// <summary>
+/// Summary description for Clothes
+/// </summary>
+public class Clothes {
     private string _id;
     private string _name;
     private int _quantity;
@@ -32,6 +36,7 @@ public class Clothes
     private string _link;
     private DateTime _dateAdded;
 
+    // GET / SET
     public string id { get { return _id; } }
     public string name { get { return _name; } set { _name = value; } }
     public int quantity { get { return _quantity; } set { _quantity = value; } }
@@ -41,9 +46,7 @@ public class Clothes
     public int category_id { get { return _category_id; } set { _category_id = value; } }
     public string link { get { return _link; } }
     public DateTime DateAdded { get => _dateAdded; }
-
-    public Clothes(string id, string name, int quantity, decimal price, string overview, char gender, int category_id, string link, DateTime dateAdded)
-    {
+    public Clothes(string id, string name, int quantity, decimal price, string overview, char gender, int category_id, string link, DateTime dateAdded) {
         this._id = id;
         this._name = name;
         this._quantity = quantity;
@@ -54,10 +57,9 @@ public class Clothes
         this._link = link;
         this._dateAdded = dateAdded;
     }
-
-    public static Clothes getClothesID(string clothesID)
-    {
+    public static Clothes getClothesID(string clothesID) {
         Clothes clothingObj;
+
         int quantity, category_id;
         string id, name, overview, link;
         decimal price;
@@ -71,8 +73,7 @@ public class Clothes
         conn.Open();
         SqlDataReader dr = cmd.ExecuteReader();
 
-        if (dr.Read())
-        {
+        if (dr.Read()) {
             id = dr["Id"].ToString();
             name = dr["name"].ToString();
             quantity = int.Parse(dr["quantity"].ToString());
@@ -84,9 +85,7 @@ public class Clothes
             dateAdded = DateTime.Parse(dr["dateAdded"].ToString());
 
             clothingObj = new Clothes(id, name, quantity, price, overview, gender, category_id, link, dateAdded);
-        }
-        else
-        {
+        } else {
             clothingObj = null;
         }
 
@@ -96,30 +95,33 @@ public class Clothes
 
         return clothingObj;
     }
+}
 
-    public class Cart
-    {
-        public string item_name;
-        public int item_quantity;
-        public double item_price;
-        public string item_color;
-        public string item_size;
-        public string clothes_id;
+/// <summary>
+/// Shopping Cart Object
+/// </summary>
+public class Cart {
+    public string item_name;
+    public int item_quantity;
+    public double item_price;
+    public string item_color;
+    public string item_size;
+    public string clothes_id;
 
-        public Cart(string item_name, int item_quantity, double item_price, string item_color, string item_size, string clothes_id)
-        {
-            this.item_name = item_name;
-            this.item_quantity = item_quantity;
-            this.item_price = item_price;
-            this.item_color = item_color;
-            this.item_size = item_size;
-            this.clothes_id = clothes_id;
-        }
+    public Cart(string item_name, int item_quantity, double item_price, string item_color, string item_size, string clothes_id) {
+        this.item_name = item_name;
+        this.item_quantity = item_quantity;
+        this.item_price = item_price;
+        this.item_color = item_color;
+        this.item_size = item_size;
+        this.clothes_id = clothes_id;
     }
 }
 
-public class Account
-{
+/// <summary>
+/// Account class for accounts table
+/// </summary>
+public class Account {
     private string _id;
     private string _firstname;
     private string _lastname;
@@ -134,6 +136,7 @@ public class Account
     private string _adress2;
     private string _zipcode;
 
+    // GET / SET
     public string id { get { return _id; } }
     public string firstname { get { return _firstname; } set { _firstname = value; } }
     public string lastname { get { return _lastname; } set { _lastname = value; } }
@@ -148,8 +151,8 @@ public class Account
     public string adress2 { get { return _adress2; } set { _adress2 = value; } }
     public string zipcode { get { return _zipcode; } set { _zipcode = value; } }
 
-    public Account(string id, string firstname, string lastname, string email, bool emailConfirmed, bool isAdmin, string password, string mobilenumber, bool mfaEnabled, string secret_key, string adress1, string adress2, string zipcode)
-    {
+    // Methods
+    public Account(string id, string firstname, string lastname, string email, bool emailConfirmed, bool isAdmin, string password, string mobilenumber, bool mfaEnabled, string secret_key, string adress1, string adress2, string zipcode) {
         this._id = id;
         this._firstname = firstname;
         this._lastname = lastname;
@@ -164,18 +167,18 @@ public class Account
         this._adress2 = adress2;
         this._zipcode = zipcode;
     }
-
-    public static Account GetAccount(string emailParam)
-    {
+    public static Account GetAccount(string emailParam) {
         Account account = null;
+
+        //string id, firstname, lastname, email, password, mobilenumber, secret_key, adress1, adress2, zipcode;
+        //bool isAdmin, mfaEnabled;
 
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
         SqlCommand cmd = new SqlCommand("select * from Accounts WHERE email = @email", conn);
         cmd.Parameters.AddWithValue("@email", emailParam);
         conn.Open();
         SqlDataReader dr = cmd.ExecuteReader();
-        if (dr.Read())
-        {
+        if (dr.Read()) {
             account = new Account(
                 dr["Id"].ToString(),
                 dr["first_name"].ToString(),
@@ -190,28 +193,26 @@ public class Account
                 dr["address1"].ToString(),
                 dr["address2"].ToString(),
                 dr["zipcode"].ToString()
-            );
+                );
+        } else {
+            account = null;
         }
         conn.Close();
         dr.Close();
         dr.Dispose();
         return account;
     }
-
-    public class SecretKeys
-    {
+    public class SecretKeys {
         public string stripe_api_key { get; set; }
     }
 }
-
-public class SecretKeys
-{
+ 
+public class SecretKeys {
     public string stripe_api_key { get; set; }
     public string google_public { get; set; }
     public string google_secret { get; set; }
     public string ipify { get; set; }
 }
-
 public class ForgetPasswordTemplateData {
     [JsonProperty("resetlink")]
     public string resetlink { get; set; }
@@ -219,7 +220,6 @@ public class ForgetPasswordTemplateData {
     //[JsonProperty("name")]
     //public string Name { get; set; }
 }
- 
 
 public class Function {
     public static string GenerateRandomPassword(int size) {
@@ -233,247 +233,248 @@ public class Function {
         }
         return string.Join("", randomPassword);
     }
-   public static string DecryptEmailToken(string textToDecrypt) {
-       try {
-           //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
-           string ToReturn = "";
-           string publickey = "12345678";
-           string secretkey = "87654321";
-           byte[] privatekeyByte = { };
-           privatekeyByte = Encoding.UTF8.GetBytes(secretkey);
-           byte[] publickeybyte = { };
-           publickeybyte = Encoding.UTF8.GetBytes(publickey);
-           MemoryStream ms = null;
-           CryptoStream cs = null;
-           byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
-           inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
-           using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
-               ms = new MemoryStream();
-               cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
-               cs.Write(inputbyteArray, 0, inputbyteArray.Length);
-               cs.FlushFinalBlock();
-               Encoding encoding = Encoding.UTF8;
-               ToReturn = encoding.GetString(ms.ToArray());
-           }
-           return ToReturn;
-       } catch (Exception ae) {
-           throw new Exception(ae.Message, ae.InnerException);
-       }
-   }
-   public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3) {
-       var data = Convert.FromBase64String(token);
-       var tokenCreationDate = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-       return tokenCreationDate < DateTime.UtcNow.AddDays(-tokenLifeSpanDays);
-   }
-   public static string EncryptEmailToken(string textToEncrypt) {
-       try {
-           //string  = "WaterWorld";
-           string ToReturn = "";
-           string publickey = "12345678";
-           string secretkey = "87654321";
-           byte[] secretkeyByte = { };
-           secretkeyByte = Encoding.UTF8.GetBytes(secretkey);
-           byte[] publickeybyte = { };
-           publickeybyte = Encoding.UTF8.GetBytes(publickey);
-           MemoryStream ms = null;
-           CryptoStream cs = null;
-           byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
-           using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
-               ms = new MemoryStream();
-               cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
-               cs.Write(inputbyteArray, 0, inputbyteArray.Length);
-               cs.FlushFinalBlock();
-               ToReturn = Convert.ToBase64String(ms.ToArray());
-           }
-           return ToReturn;
-       } catch (Exception ex) {
-           throw new Exception(ex.Message, ex.InnerException);
-       }
-   }
-   public static string CreateEmailToken(byte[] arg) {
-       var time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
-       var key = arg ?? Guid.NewGuid().ToByteArray();
-       var token = Convert.ToBase64String(time.Concat(key).ToArray());
+    public static string DecryptEmailToken(string textToDecrypt) {
+        try {
+            //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
+            string ToReturn = "";
+            string publickey = "12345678";
+            string secretkey = "87654321";
+            byte[] privatekeyByte = { };
+            privatekeyByte = Encoding.UTF8.GetBytes(secretkey);
+            byte[] publickeybyte = { };
+            publickeybyte = Encoding.UTF8.GetBytes(publickey);
+            MemoryStream ms = null;
+            CryptoStream cs = null;
+            byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
+            inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
+            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
+                ms = new MemoryStream();
+                cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
+                cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+                cs.FlushFinalBlock();
+                Encoding encoding = Encoding.UTF8;
+                ToReturn = encoding.GetString(ms.ToArray());
+            }
+            return ToReturn;
+        } catch (Exception ae) {
+            throw new Exception(ae.Message, ae.InnerException);
+        }
+    }
+    public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3) {
+        var data = Convert.FromBase64String(token);
+        var tokenCreationDate = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
+        return tokenCreationDate < DateTime.UtcNow.AddDays(-tokenLifeSpanDays);
+    }
+    public static string EncryptEmailToken(string textToEncrypt) {
+        try {
+            //string  = "WaterWorld";
+            string ToReturn = "";
+            string publickey = "12345678";
+            string secretkey = "87654321";
+            byte[] secretkeyByte = { };
+            secretkeyByte = Encoding.UTF8.GetBytes(secretkey);
+            byte[] publickeybyte = { };
+            publickeybyte = Encoding.UTF8.GetBytes(publickey);
+            MemoryStream ms = null;
+            CryptoStream cs = null;
+            byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
+            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
+                ms = new MemoryStream();
+                cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+                cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+                cs.FlushFinalBlock();
+                ToReturn = Convert.ToBase64String(ms.ToArray());
+            }
+            return ToReturn;
+        } catch (Exception ex) {
+            throw new Exception(ex.Message, ex.InnerException);
+        }
+    }
+    public static string CreateEmailToken(byte[] arg) {
+        var time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+        var key = arg ?? Guid.NewGuid().ToByteArray();
+        var token = Convert.ToBase64String(time.Concat(key).ToArray());
 
-       return token;
-   }
-  // Admin DB
-  public static GridView GetAllClothes(GridView gridView)
-  {
-      DataTable dt = new DataTable();
-      using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-      {
-          using (SqlCommand command = new SqlCommand("Product_CRUD", connection))
-          {
-              connection.Open();
-              command.Parameters.AddWithValue("@ACTION", "SELECT");
-              command.CommandType = CommandType.StoredProcedure;
+        return token;
+    }
 
-              using (SqlDataAdapter sql = new SqlDataAdapter())
-              {
-                  sql.SelectCommand = command;
+    // Admin DB
+    public static GridView GetAllClothes(GridView gridView)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("Product_CRUD", connection))
+            {
+                connection.Open();
+                command.Parameters.AddWithValue("@ACTION", "SELECT");
+                command.CommandType = CommandType.StoredProcedure;
 
-                  sql.Fill(dt);
-              }
-              if (dt.Rows.Count > 0)
-              {
-                  gridView.DataSource = dt;
-                  gridView.DataBind();
-                  gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
-              }
-              else
-              {
-                  dt.Rows.Add(dt.NewRow());
-                  gridView.DataSource = dt;
-                  gridView.DataBind();
-                  gridView.Rows[0].Cells.Clear();
-                  gridView.Rows[0].Cells.Add(new TableCell());
-                  gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
-                  gridView.Rows[0].Cells[0].Text = "No Clothes in Database";
-                  gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                  gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
-              }
-          }
-      }
-      return gridView;
-  }
+                using (SqlDataAdapter sql = new SqlDataAdapter())
+                {
+                    sql.SelectCommand = command;
 
-   public static GridView AdminUpdateClothe(GridView gridView, int rowIndex) {
-       try
-       {
-           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-           {
-               using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
-               {
-                   connection.Open();
-                   sql.Parameters.AddWithValue("@ACTION", "UPDATE");
-                   sql.CommandType = CommandType.StoredProcedure;
-                   sql.Parameters.AddWithValue("@id", gridView.DataKeys[rowIndex].Value.ToString());
-                   sql.Parameters.AddWithValue("@name", (gridView.Rows[rowIndex].FindControl("TextBox_name") as TextBox).Text.Trim());
-                   sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_quantity") as TextBox).Text.Trim()));
-                   sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.Rows[rowIndex].FindControl("TextBox_price") as TextBox).Text.Trim()));
-                   sql.Parameters.AddWithValue("@overview", (gridView.Rows[rowIndex].FindControl("TextBox_Overview") as TextBox).Text.Trim());
-                   sql.Parameters.AddWithValue("@gender", (gridView.Rows[rowIndex].FindControl("TextBox_gender") as TextBox).Text.Trim());
-                   sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_categoryID") as TextBox).Text.Trim()));
-                   sql.Parameters.AddWithValue("@link", (gridView.Rows[rowIndex].FindControl("TextBox_link") as TextBox).Text.Trim());
-                   //sql.Parameters.AddWithValue("@", );
-                   sql.ExecuteNonQuery();
-                   gridView.EditIndex = -1;
-                   //gridView = GetAllClothes(gridView);
-                   return gridView;
-               }
-           }
-       }
-       catch (SqlException)
-       {
-           return null;
-       }
-       catch (FormatException)
-       {
-           return null;
-       }
-   }
-   public static GridView AdminDeleteClothe(GridView gridView, int rowIndex, HttpServerUtility server)
-   {
-       try
-       {
-           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-           {
-               using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
-               {
-                   connection.Open();
-                   string id = gridView.DataKeys[rowIndex].Value.ToString();
-                   sql.Parameters.AddWithValue("@ACTION", "DELETE");
-                   sql.CommandType = CommandType.StoredProcedure;
-                   sql.Parameters.AddWithValue("@id", id);
-                   sql.ExecuteNonQuery();
+                    sql.Fill(dt);
+                }
+                if (dt.Rows.Count > 0)
+                {
+                    gridView.DataSource = dt;
+                    gridView.DataBind();
+                    gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
+                }
+                else
+                {
+                    dt.Rows.Add(dt.NewRow());
+                    gridView.DataSource = dt;
+                    gridView.DataBind();
+                    gridView.Rows[0].Cells.Clear();
+                    gridView.Rows[0].Cells.Add(new TableCell());
+                    gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
+                    gridView.Rows[0].Cells[0].Text = "No Clothes in Database";
+                    gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
+                    gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
+                }
+            }
+        }
+        return gridView;
+    }
+    public static GridView AdminUpdateClothe(GridView gridView, int rowIndex) {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+            {
+                using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+                {
+                    connection.Open();
+                    sql.Parameters.AddWithValue("@ACTION", "UPDATE");
+                    sql.CommandType = CommandType.StoredProcedure;
+                    sql.Parameters.AddWithValue("@id", gridView.DataKeys[rowIndex].Value.ToString());
+                    sql.Parameters.AddWithValue("@name", (gridView.Rows[rowIndex].FindControl("TextBox_name") as TextBox).Text.Trim());
+                    sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_quantity") as TextBox).Text.Trim()));
+                    sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.Rows[rowIndex].FindControl("TextBox_price") as TextBox).Text.Trim()));
+                    sql.Parameters.AddWithValue("@overview", (gridView.Rows[rowIndex].FindControl("TextBox_Overview") as TextBox).Text.Trim());
+                    sql.Parameters.AddWithValue("@gender", (gridView.Rows[rowIndex].FindControl("TextBox_gender") as TextBox).Text.Trim());
+                    sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_categoryID") as TextBox).Text.Trim()));
+                    sql.Parameters.AddWithValue("@link", (gridView.Rows[rowIndex].FindControl("TextBox_link") as TextBox).Text.Trim());
+                    //sql.Parameters.AddWithValue("@", );
+                    sql.ExecuteNonQuery();
+                    gridView.EditIndex = -1;
+                    //gridView = GetAllClothes(gridView);
+                    return gridView;
+                }
+            }
+        }
+        catch (SqlException)
+        {
+            return null;
+        }
+        catch (FormatException)
+        {
+            return null;
+        }
+    }
+    public static GridView AdminDeleteClothe(GridView gridView, int rowIndex, HttpServerUtility server)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+            {
+                using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+                {
+                    connection.Open();
+                    string id = gridView.DataKeys[rowIndex].Value.ToString();
+                    sql.Parameters.AddWithValue("@ACTION", "DELETE");
+                    sql.CommandType = CommandType.StoredProcedure;
+                    sql.Parameters.AddWithValue("@id", id);
+                    sql.ExecuteNonQuery();
 
-                   // Remove Directory
-                   DirectoryInfo di = new DirectoryInfo(server.MapPath(@"/assets/img/_clothing/carousel/" + id + "/"));
-                   foreach (FileInfo file in di.GetFiles())
-                   {
-                       file.Delete();
-                   }
-                   di.Delete();
+                    // Remove Directory
+                    DirectoryInfo di = new DirectoryInfo(server.MapPath(@"/assets/img/_clothing/carousel/" + id + "/"));
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    di.Delete();
 
-                   gridView = GetAllClothes(gridView);
-                   return gridView;
-               }
-           }
-       }
-       catch (SqlException) { return null; }
-   }
-   public static GridView AdminInsertClothing(GridView gridView, GridViewCommandEventArgs e, HttpServerUtility server) {
-       try
-       {
-           if (e.CommandName == "Add") {
-               using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-               {
-                   using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
-                   {
-                       connection.Open();
-                       sql.Parameters.AddWithValue("@ACTION", "INSERT");
-                       sql.CommandType = CommandType.StoredProcedure;
-                       string id = Guid.NewGuid().ToString();
-                       sql.Parameters.AddWithValue("@id", id);
-                       sql.Parameters.AddWithValue("@name", (gridView.HeaderRow.FindControl("Add_Name") as TextBox).Text.Trim());
-                       sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_Quantity") as TextBox).Text.Trim()));
-                       sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.HeaderRow.FindControl("Add_Price") as TextBox).Text.Trim()));
-                       sql.Parameters.AddWithValue("@overview", (gridView.HeaderRow.FindControl("Add_Overview") as TextBox).Text.Trim());
-                       sql.Parameters.AddWithValue("@gender", (gridView.HeaderRow.FindControl("Add_Gender") as TextBox).Text.Trim().ToUpper());
-                       sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_CategoryID") as TextBox).Text.Trim()));
-                       sql.Parameters.AddWithValue("@link", (gridView.HeaderRow.FindControl("Add_Link") as TextBox).Text.Trim());
-                       sql.Parameters.AddWithValue("@today", DateTime.Now);
-                       sql.ExecuteNonQuery();
+                    gridView = GetAllClothes(gridView);
+                    return gridView;
+                }
+            }
+        }
+        catch (SqlException) { return null; }
+    }
+    public static GridView AdminInsertClothing(GridView gridView, GridViewCommandEventArgs e, HttpServerUtility server) {
+        try
+        {
+            if (e.CommandName == "Add") {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+                {
+                    using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+                    {
+                        connection.Open();
+                        sql.Parameters.AddWithValue("@ACTION", "INSERT");
+                        sql.CommandType = CommandType.StoredProcedure;
+                        string id = Guid.NewGuid().ToString();
+                        sql.Parameters.AddWithValue("@id", id);
+                        sql.Parameters.AddWithValue("@name", (gridView.HeaderRow.FindControl("Add_Name") as TextBox).Text.Trim());
+                        sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_Quantity") as TextBox).Text.Trim()));
+                        sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.HeaderRow.FindControl("Add_Price") as TextBox).Text.Trim()));
+                        sql.Parameters.AddWithValue("@overview", (gridView.HeaderRow.FindControl("Add_Overview") as TextBox).Text.Trim());
+                        sql.Parameters.AddWithValue("@gender", (gridView.HeaderRow.FindControl("Add_Gender") as TextBox).Text.Trim().ToUpper());
+                        sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_CategoryID") as TextBox).Text.Trim()));
+                        sql.Parameters.AddWithValue("@link", (gridView.HeaderRow.FindControl("Add_Link") as TextBox).Text.Trim());
+                        sql.Parameters.AddWithValue("@today", DateTime.Now);
+                        sql.ExecuteNonQuery();
 
-                       // Create directory for images
-                       string path = server.MapPath(@"/assets/img/_clothing/carousel/" + id);
-                       if (!Directory.Exists(path))
-                       {
-                           Directory.CreateDirectory(path);
-                       }
+                        // Create directory for images
+                        string path = server.MapPath(@"/assets/img/_clothing/carousel/" + id);
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
 
-                       // Save Images
-                       StringBuilder files = new StringBuilder();
-                       FileUpload images = (gridView.HeaderRow.FindControl("FileUpload_image") as FileUpload);
-                       try
-                       {
-                           if (images.HasFiles)
-                           {
+                        // Save Images
+                        StringBuilder files = new StringBuilder();
+                        FileUpload images = (gridView.HeaderRow.FindControl("FileUpload_image") as FileUpload);
+                        try
+                        {
+                            if (images.HasFiles)
+                            {
 
-                               foreach (var image in images.PostedFiles)
-                               {
+                                foreach (var image in images.PostedFiles)
+                                {
 
-                                   // Check if "1.jpg" exists, if not rename the image to it - Saving images
-                                   if (!System.IO.File.Exists(Path.Combine(path, "1.jpg"))) image.SaveAs(Path.Combine(path, "1.jpg"));
-                                   else image.SaveAs(Path.Combine(path, image.FileName));
-                               }
-                           }
-                       }
-                       catch (Exception err)
-                       {
-                           Debug.WriteLine(err);
-                           return null;
-                       }
-                       //return gridView;
-                       return GetAllClothes(gridView);
-                   }
-               }
-           }
-       }
-       catch (SqlException err)
-       {
-           Debug.WriteLine(err);
-           return null;
-       }
-       catch (FormatException err)
-       {
-           Debug.WriteLine(err);
-           return null;
-       }
-       return null;
-   }
+                                    // Check if "1.jpg" exists, if not rename the image to it - Saving images
+                                    if (!System.IO.File.Exists(Path.Combine(path, "1.jpg"))) image.SaveAs(Path.Combine(path, "1.jpg"));
+                                    else image.SaveAs(Path.Combine(path, image.FileName));
+                                }
+                            }
+                        }
+                        catch (Exception err)
+                        {
+                            Debug.WriteLine(err);
+                            return null;
+                        }
+                        //return gridView;
+                        return GetAllClothes(gridView);
+                    }
+                }
+            }
+        }
+        catch (SqlException err)
+        {
+            Debug.WriteLine(err);
+            return null;
+        }
+        catch (FormatException err)
+        {
+            Debug.WriteLine(err);
+            return null;
+        }
+        return null;
+    }
    
+  
     public static int GetDecryptedTokenEmailFromDataBase(string decryptedToken)
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
@@ -502,7 +503,6 @@ public class Function {
 
         conn.Close();
     }
-
     public static void UpdateUserAddress(string TextBox_Email, string TextBox_Address1, string TextBox_Address2, string TextBox_Zipcode)
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
@@ -518,53 +518,52 @@ public class Function {
         }
         conn.Close();
     }
+    public static void RegisterUser(string TextBox_Email, dynamic TextBox_Address1, dynamic TextBox_Address2, dynamic TextBox_Zipcode, string TextBox_FirstName, string TextBox_LastName, string TextBox_MobileNumber, string password)
+    {
+        using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            sqlConnection.Open();
+            string query = "INSERT INTO accounts (Id, first_name, last_name, email, emailConfirmed, isAdmin, password, mobile_number, multi_factor_enabled, secret_key, address1, address2, zipcode) values (@id, @first, @last, @email, @emailConfirmed, @admin, @password, @mobile, @multi_factor_enabled, @secret_key, @address1, @address2, @zipcode)";
+            SqlCommand com = new SqlCommand(query, sqlConnection);
+            com.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+            com.Parameters.AddWithValue("@first", TextBox_FirstName);
+            com.Parameters.AddWithValue("@last", TextBox_LastName);
+            com.Parameters.AddWithValue("@email", TextBox_Email);
+            com.Parameters.AddWithValue("@emailConfirmed", false);
+            com.Parameters.AddWithValue("@admin", false);
+            com.Parameters.AddWithValue("@password", password);
+            com.Parameters.AddWithValue("@mobile", TextBox_MobileNumber);
+            com.Parameters.AddWithValue("@multi_factor_enabled", false);
+            com.Parameters.AddWithValue("@secret_key", DBNull.Value);
+            com.Parameters.AddWithValue("@address1", TextBox_Address1);
+            com.Parameters.AddWithValue("@address2", TextBox_Address2);
+            com.Parameters.AddWithValue("@zipcode", TextBox_Zipcode);
+            com.ExecuteNonQuery();
+        }
+    }
+    public static void SaveCountryToDatabase(string countryISO)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
 
-  public static void RegisterUser(string TextBox_Email, dynamic TextBox_Address1, dynamic TextBox_Address2, dynamic TextBox_Zipcode, string TextBox_FirstName, string TextBox_LastName, string TextBox_MobileNumber, string password)
-  {
-      using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-      {
-          sqlConnection.Open();
-          string query = "INSERT INTO accounts (Id, first_name, last_name, email, emailConfirmed, isAdmin, password, mobile_number, multi_factor_enabled, secret_key, address1, address2, zipcode) values (@id, @first, @last, @email, @emailConfirmed, @admin, @password, @mobile, @multi_factor_enabled, @secret_key, @address1, @address2, @zipcode)";
-          SqlCommand com = new SqlCommand(query, sqlConnection);
-          com.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
-          com.Parameters.AddWithValue("@first", TextBox_FirstName);
-          com.Parameters.AddWithValue("@last", TextBox_LastName);
-          com.Parameters.AddWithValue("@email", TextBox_Email);
-          com.Parameters.AddWithValue("@emailConfirmed", false);
-          com.Parameters.AddWithValue("@admin", false);
-          com.Parameters.AddWithValue("@password", password);
-          com.Parameters.AddWithValue("@mobile", TextBox_MobileNumber);
-          com.Parameters.AddWithValue("@multi_factor_enabled", false);
-          com.Parameters.AddWithValue("@secret_key", DBNull.Value);
-          com.Parameters.AddWithValue("@address1", TextBox_Address1);
-          com.Parameters.AddWithValue("@address2", TextBox_Address2);
-          com.Parameters.AddWithValue("@zipcode", TextBox_Zipcode);
-          com.ExecuteNonQuery();
-      }
-  }
-  public static void SaveCountryToDatabase(string countryISO)
-  {
-      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        SqlCommand com = new SqlCommand($"SELECT COUNT(*) FROM countries WHERE country = '{countryISO}'", conn);
 
-      conn.Open();
-      SqlCommand com = new SqlCommand($"SELECT COUNT(*) FROM countries WHERE country = '{countryISO}'", conn);
+        int countryexists = Convert.ToInt32(com.ExecuteScalar().ToString());
+        // If country exists update count else create new row
+        if (countryexists == 1)
+        {
+            com.CommandText = $"update Countries set count=count+1 where country='{countryISO}'";
+            com.ExecuteNonQuery();
+        }
+        else
+        {
+            com.CommandText = $"INSERT INTO countries (Id, country, count) values ('{Guid.NewGuid().ToString()}', '{countryISO}', 1)";
+            com.ExecuteNonQuery();
+        }
+        conn.Close();
+    }
 
-      int countryexists = Convert.ToInt32(com.ExecuteScalar().ToString());
-      // If country exists update count else create new row
-      if (countryexists == 1)
-      {
-          com.CommandText = $"update Countries set count=count+1 where country='{countryISO}'";
-          com.ExecuteNonQuery();
-      }
-      else
-      {
-          com.CommandText = $"INSERT INTO countries (Id, country, count) values ('{Guid.NewGuid().ToString()}', '{countryISO}', 1)";
-          com.ExecuteNonQuery();
-      }
-      conn.Close();
-  }
-
-
+ 
     public static void AddCategoriesTableDB(dynamic carts)
     {
         using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
@@ -611,7 +610,6 @@ public class Function {
         }
         return repeater;
     }
-
     public static int CheckIfUserExists(string email)
     {
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
@@ -654,67 +652,66 @@ public class Function {
         return password;
 
     }
+    public static void SetUserVerificationTrue(string email) {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        SqlCommand cmd = new SqlCommand("update accounts set emailconfirmed = @verified where email = @email", conn);
+        cmd.Parameters.AddWithValue("@email", email);
+        cmd.Parameters.AddWithValue("@verified", true);
+        cmd.ExecuteNonQuery();
+        conn.Close();
+    }
 
-public static void SetUserVerificationTrue(string email) {
-    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-    conn.Open();
-    SqlCommand cmd = new SqlCommand("update accounts set emailconfirmed = @verified where email = @email", conn);
-    cmd.Parameters.AddWithValue("@email", email);
-    cmd.Parameters.AddWithValue("@verified", true);
-    cmd.ExecuteNonQuery();
-    conn.Close();
-}
-
- public static DataSet GetMenTops() {
-     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-     {
-         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (5,6,7,8)", conn);
-         DataSet temp = new DataSet();
-         sql.Fill(temp);
-         return temp;
-     }
- }
- public static DataSet GetMenBottoms()
- {
-     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-     {
-         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (1,2,3,4)", conn);
-         DataSet temp = new DataSet();
-         sql.Fill(temp);
-         return temp;
-     }
- }
- public static Repeater ProductListCategory(Repeater repeater, char gender, int category_id) {
-     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-     {
-         SqlDataAdapter sql = new SqlDataAdapter($"select * from Clothes where gender = '{gender}' and category_id in ({category_id})", conn);
-         DataSet temp = new DataSet();
-         sql.Fill(temp);
-         repeater.DataSource = temp;
-         repeater.DataBind();
-     }
-     return repeater;
- }
- public static DataSet GetWomenTops()
- {
-     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-     {
-         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (11,12,13,7,8)", conn);
-         DataSet temp = new DataSet();
-         sql.Fill(temp);
-         return temp;
-     }
- }
- public static DataSet GetWomenBottoms()
- {
-     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-     {
-         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (2,9,3,4,10)", conn);
-         DataSet temp = new DataSet();
-         sql.Fill(temp);
-         return temp;
-     }
- }
+    public static DataSet GetMenTops() {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (5,6,7,8)", conn);
+            DataSet temp = new DataSet();
+            sql.Fill(temp);
+            return temp;
+        }
+    }
+    public static DataSet GetMenBottoms()
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (1,2,3,4)", conn);
+            DataSet temp = new DataSet();
+            sql.Fill(temp);
+            return temp;
+        }
+    }
+    public static Repeater ProductListCategory(Repeater repeater, char gender, int category_id) {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            SqlDataAdapter sql = new SqlDataAdapter($"select * from Clothes where gender = '{gender}' and category_id in ({category_id})", conn);
+            DataSet temp = new DataSet();
+            sql.Fill(temp);
+            repeater.DataSource = temp;
+            repeater.DataBind();
+        }
+        return repeater;
+    }
+    public static DataSet GetWomenTops()
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (11,12,13,7,8)", conn);
+            DataSet temp = new DataSet();
+            sql.Fill(temp);
+            return temp;
+        }
+    }
+    public static DataSet GetWomenBottoms()
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (2,9,3,4,10)", conn);
+            DataSet temp = new DataSet();
+            sql.Fill(temp);
+            return temp;
+        }
+    }
 
     public static int AnyResultsFromSearch(string search_input)
     {
@@ -752,63 +749,62 @@ public static void SetUserVerificationTrue(string email) {
         return repeater;
     }
 
-  public static void UpdateUserInformation(string TextBox_Firstname, string TextBox_Lastname, string TextBox_MobileNumber, string TextBox_Address1, string TextBox_Address2, string TextBox_Zipcode,string email)
-  {
-      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-      conn.Open();
+    public static void UpdateUserInformation(string TextBox_Firstname, string TextBox_Lastname, string TextBox_MobileNumber, string TextBox_Address1, string TextBox_Address2, string TextBox_Zipcode,string email)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
 
-      SqlCommand command = new SqlCommand("update Accounts set first_name = @fn, last_name = @ln, mobile_number = @mn, address1 = @ad1, address2 = @ad2, zipcode = @zc where email = @email", conn);
-      command.Parameters.AddWithValue("@fn", TextBox_Firstname);
-      command.Parameters.AddWithValue("@ln", TextBox_Lastname);
-      command.Parameters.AddWithValue("@mn", TextBox_MobileNumber);
-      command.Parameters.AddWithValue("@ad1", TextBox_Address1);
-      command.Parameters.AddWithValue("@ad2", TextBox_Address2);
-      command.Parameters.AddWithValue("@zc", TextBox_Zipcode);
-      command.Parameters.AddWithValue("@email", email);
-      command.ExecuteNonQuery();
-  }
-  public static void UpdateUserPassword(string email, string password)
-  {
-      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-      conn.Open();
+        SqlCommand command = new SqlCommand("update Accounts set first_name = @fn, last_name = @ln, mobile_number = @mn, address1 = @ad1, address2 = @ad2, zipcode = @zc where email = @email", conn);
+        command.Parameters.AddWithValue("@fn", TextBox_Firstname);
+        command.Parameters.AddWithValue("@ln", TextBox_Lastname);
+        command.Parameters.AddWithValue("@mn", TextBox_MobileNumber);
+        command.Parameters.AddWithValue("@ad1", TextBox_Address1);
+        command.Parameters.AddWithValue("@ad2", TextBox_Address2);
+        command.Parameters.AddWithValue("@zc", TextBox_Zipcode);
+        command.Parameters.AddWithValue("@email", email);
+        command.ExecuteNonQuery();
+    }
+    public static void UpdateUserPassword(string email, string password)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
 
-      SqlCommand command = new SqlCommand("update Accounts set password = @pw where email = @email", conn);
-      command.Parameters.AddWithValue("@email", email);
-      command.Parameters.AddWithValue("@pw", password);
-      command.ExecuteNonQuery();
-      conn.Close();
-  }
-  public static bool UserAlreadyCreatedReview(string product_id, dynamic email)
-  {
-      if (email == null) return false;
+        SqlCommand command = new SqlCommand("update Accounts set password = @pw where email = @email", conn);
+        command.Parameters.AddWithValue("@email", email);
+        command.Parameters.AddWithValue("@pw", password);
+        command.ExecuteNonQuery();
+        conn.Close();
+    }
 
-      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-      conn.Open();
-      SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Ratings WHERE account_id = @aid AND product_id = @pid", conn);
-      command.Parameters.AddWithValue("@aid", Account.GetAccount(email.ToString()).id);
-      command.Parameters.AddWithValue("@pid", product_id);
-      return Convert.ToInt32(command.ExecuteScalar().ToString()) == 0 ? false : true;
-  }
+    public static bool UserAlreadyCreatedReview(string product_id, dynamic email)
+    {
+        if (email == null) return false;
 
- public static string GetUserFullnameByAccountID(string account_id)
- {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Ratings WHERE account_id = @aid AND product_id = @pid", conn);
+        command.Parameters.AddWithValue("@aid", Account.GetAccount(email.ToString()).id);
+        command.Parameters.AddWithValue("@pid", product_id);
+        return Convert.ToInt32(command.ExecuteScalar().ToString()) == 0 ? false : true;
+    }
+    public static string GetUserFullnameByAccountID(string account_id)
+    {
 
-     SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-     SqlCommand cmd = new SqlCommand("select * from Accounts WHERE id = @aid", conn);
-     cmd.Parameters.AddWithValue("@aid", account_id);
-     conn.Open();
-     SqlDataReader dr = cmd.ExecuteReader();
-     string name = "";
-     if (dr.Read())
-     {
-         name = dr["first_name"].ToString() + " " + dr["last_name"].ToString();
-     }
-     conn.Close();
-     dr.Close();
-     dr.Dispose();
-     return name;
- }
-
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("select * from Accounts WHERE id = @aid", conn);
+        cmd.Parameters.AddWithValue("@aid", account_id);
+        conn.Open();
+        SqlDataReader dr = cmd.ExecuteReader();
+        string name = "";
+        if (dr.Read())
+        {
+            name = dr["first_name"].ToString() + " " + dr["last_name"].ToString();
+        }
+        conn.Close();
+        dr.Close();
+        dr.Dispose();
+        return name;
+    }
     public static DataTable GetAverageRating(string product_id)
     {
         // SELECT ISNULL(AVG(Rating), 0) AverageRating, COUNT(Rating) " + "RatingCount FROM [RATINGS] WHERE Title = @booktitle
@@ -933,6 +929,20 @@ public static void SetUserVerificationTrue(string email) {
         smtpclient.Send(mail);
     }
 
+    // Order & Purchase History
+    public static void CreateOrderHistory(string id, decimal total, DateTime date_purchased, string account_id) {
+        using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            sqlConnection.Open();
+            string query = "INSERT INTO Orders (Id, total, date_purchased, account_id) values (@id, @total, @date_purchased, @account_id)";
+            SqlCommand com = new SqlCommand(query, sqlConnection);
+            com.Parameters.AddWithValue("@id", id);
+            com.Parameters.AddWithValue("@total", total);
+            com.Parameters.AddWithValue("@date_purchased", date_purchased);
+            com.Parameters.AddWithValue("@account_id", account_id);
+            com.ExecuteNonQuery();
+        }
+    }
     public static void CreatePurchaseHistory(int quantity, string clothing_id, string order_id)
     {
         using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
@@ -971,6 +981,7 @@ public static void SetUserVerificationTrue(string email) {
             return dt;
         }
     }
+
     public static GridView GetAllUsers(GridView gridView)
     {
         DataTable dt = new DataTable();
@@ -1007,41 +1018,25 @@ public static void SetUserVerificationTrue(string email) {
         }
         return gridView;
     }
-   public static GridView AdminDeleteUser(GridView gridView, int rowIndex, HttpServerUtility server)
-   {
-       try
-       {
-           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-           {
-               using (SqlCommand sql = new SqlCommand("DELETE Accounts where id = @id", connection))
-               {
-                   connection.Open();
-                   string id = gridView.DataKeys[rowIndex].Value.ToString();
-                   sql.Parameters.AddWithValue("@id", id);
-                   sql.ExecuteNonQuery();
-
-                   gridView = GetAllUsers(gridView);
-                   return gridView;
-               }
-           }
-       } catch (SqlException) { return null; }
-   }
-
-    public static void RemoveUserVoid(String email)
+    public static GridView AdminDeleteUser(GridView gridView, int rowIndex, HttpServerUtility server)
     {
- 
+        try
+        {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
             {
-                using (SqlCommand sql = new SqlCommand("DELETE Accounts where email = @id", connection))
+                using (SqlCommand sql = new SqlCommand("DELETE Accounts where id = @id", connection))
                 {
                     connection.Open();
-                    sql.Parameters.AddWithValue("@id", email);
+                    string id = gridView.DataKeys[rowIndex].Value.ToString();
+                    sql.Parameters.AddWithValue("@id", id);
                     sql.ExecuteNonQuery();
+
+                    gridView = GetAllUsers(gridView);
+                    return gridView;
                 }
             }
-        
+        } catch (SqlException) { return null; }
     }
-
     public static void RemoveUserVoid(String email)
     {
  
