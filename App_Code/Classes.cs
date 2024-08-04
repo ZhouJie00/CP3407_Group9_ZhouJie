@@ -904,4 +904,32 @@ public static void SetUserVerificationTrue(string email) {
         return ReturnValue;
     }
 
+    /// <summary>
+    /// ALL MAIL STUFF
+    /// </summary>
+    public static void SendMail(string email, string subject, string body)
+    {
+        var my_email = "projecttestemail504@gmail.com";
+        var my_password = "zdml pmeu mhzj gsgn";// "bqrg wkii qwwk xqhb";
+
+
+        SmtpClient smtpclient = new SmtpClient("smtp.gmail.com", 587);
+        //smtpclient.DeliveryMethod = SmtpDeliveryMethod.Network;
+        smtpclient.EnableSsl = true;
+
+
+        smtpclient.Credentials = new  NetworkCredential(my_email, my_password);
+        //smtpclient.UseDefaultCredentials = false;
+        
+        
+        MailMessage mail = new MailMessage();
+        mail.From = new MailAddress(my_email, "TrendyTrees@gmail.com");
+        mail.To.Add(new MailAddress(email));
+
+        mail.Subject = subject;
+        mail.IsBodyHtml = true;
+        mail.Body = body;
+
+        smtpclient.Send(mail);
+    }
 }
