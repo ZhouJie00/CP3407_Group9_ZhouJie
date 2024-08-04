@@ -564,4 +564,51 @@ public class Function {
       conn.Close();
   }
 
+
+    public static void AddCategoriesTableDB(dynamic carts)
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            conn.Open();
+            foreach (KeyValuePair<string, Cart> kvp in carts)
+            {
+
+                string query = "update Category set count=1 where id = " +
+                    "(Select Category.Id from Clothes inner join Category on Clothes.category_id = Category.Id " +
+                    $"where Clothes.Id = '{kvp.Value.clothes_id}')";
+
+                SqlCommand command = new SqlCommand(query, conn);
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
+    public static Repeater DisplayNewClothing(Repeater repeater)
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            using (SqlCommand sql = new SqlCommand("select top 6 * from Clothes order by DateAdded desc", conn))
+            {
+                conn.Open();
+                SqlDataReader dataTable = sql.ExecuteReader();
+                repeater.DataSource = dataTable;
+                repeater.DataBind();
+            }
+        }
+        return repeater;
+    }
+    public static Repeater DisplayRandomClothing(Repeater repeater)
+    {
+        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            using (SqlCommand sql = new SqlCommand("select * from Clothes where Id in (select top 6 Id from Clothes order by newid())", conn))
+            {
+                conn.Open();
+                SqlDataReader dataTable = sql.ExecuteReader();
+                repeater.DataSource = dataTable;
+                repeater.DataBind();
+            }
+        }
+        return repeater;
+    }
 }
