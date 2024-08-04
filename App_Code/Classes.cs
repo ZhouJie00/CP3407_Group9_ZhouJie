@@ -932,4 +932,44 @@ public static void SetUserVerificationTrue(string email) {
 
         smtpclient.Send(mail);
     }
+
+    public static void CreatePurchaseHistory(int quantity, string clothing_id, string order_id)
+    {
+        using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            sqlConnection.Open();
+            string query = "INSERT INTO Purchase (Id, quantity, clothing_id, order_id) values (@id, @quantity, @clothing_id, @order_id)";
+            SqlCommand com = new SqlCommand(query, sqlConnection);
+            com.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+            com.Parameters.AddWithValue("@quantity", quantity);
+            com.Parameters.AddWithValue("@clothing_id", clothing_id);
+            com.Parameters.AddWithValue("@order_id", order_id);
+            com.ExecuteNonQuery();
+        }
+    }
+    public static DataTable GetOrderHistory(string account_id)
+    {
+        DataTable dt = new DataTable();
+
+        using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            sqlConnection.Open();
+            SqlDataAdapter sda = new SqlDataAdapter($"SELECT * FROM ORDERS WHERE account_id = '{account_id}'", sqlConnection);
+            sda.Fill(dt);
+            return dt;
+        }
+    }
+    public static DataTable GetPurchaseHistory(string order_id)
+    {
+        DataTable dt = new DataTable();
+
+        using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+        {
+            sqlConnection.Open();
+            SqlDataAdapter sda = new SqlDataAdapter($"SELECT * FROM Purchase WHERE order_id = '{order_id}'", sqlConnection);
+            sda.Fill(dt);
+            return dt;
+        }
+    }
+
 }
