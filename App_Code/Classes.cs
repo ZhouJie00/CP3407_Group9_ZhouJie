@@ -103,6 +103,29 @@ public class Clothes
         return clothingObj;
     }
 
+    /// <summary>
+    /// Shopping Cart Object
+    /// </summary>
+    public class Cart
+    {
+        public string item_name;
+        public int item_quantity;
+        public double item_price;
+        public string item_color;
+        public string item_size;
+        public string clothes_id;
+
+        public Cart(string item_name, int item_quantity, double item_price, string item_color, string item_size, string clothes_id)
+        {
+            this.item_name = item_name;
+            this.item_quantity = item_quantity;
+            this.item_price = item_price;
+            this.item_color = item_color;
+            this.item_size = item_size;
+            this.clothes_id = clothes_id;
+        }
+    }
+
     public static GridView GetAllUsers(GridView gridView)
     {
         DataTable dt = new DataTable();
