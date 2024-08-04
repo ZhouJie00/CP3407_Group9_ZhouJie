@@ -125,6 +125,96 @@ public class Clothes
             this.clothes_id = clothes_id;
         }
     }
+}
+
+/// <summary>
+/// Account class for accounts table
+/// </summary>
+public class Account
+{
+    private string _id;
+    private string _firstname;
+    private string _lastname;
+    private string _email;
+    private bool _emailConfirmed;
+    private bool _isAdmin;
+    private string _password;
+    private string _mobilenumber;
+    private bool _mfaEnabled;
+    private string _secret_key;
+    private string _adress1;
+    private string _adress2;
+    private string _zipcode;
+
+    // GET / SET
+    public string id { get { return _id; } }
+    public string firstname { get { return _firstname; } set { _firstname = value; } }
+    public string lastname { get { return _lastname; } set { _lastname = value; } }
+    public string email { get { return _email; } set { _email = value; } }
+    public bool emailConfirmed { get { return _emailConfirmed; } set { _emailConfirmed = value; } }
+    public bool isAdmin { get { return _isAdmin; } }
+    public string password { get { return _password; } }
+    public string mobilenumber { get { return _mobilenumber; } set { _mobilenumber = value; } }
+    public bool mfaEnabled { get { return _mfaEnabled; } set { _mfaEnabled = value; } }
+    public string secret_key { get { return _secret_key; } set { _secret_key = value; } }
+    public string adress1 { get { return _adress1; } set { _adress1 = value; } }
+    public string adress2 { get { return _adress2; } set { _adress2 = value; } }
+    public string zipcode { get { return _zipcode; } set { _zipcode = value; } }
+
+    // Methods
+    public Account(string id, string firstname, string lastname, string email, bool emailConfirmed, bool isAdmin, string password, string mobilenumber, bool mfaEnabled, string secret_key, string adress1, string adress2, string zipcode)
+    {
+        this._id = id;
+        this._firstname = firstname;
+        this._lastname = lastname;
+        this._email = email;
+        this._emailConfirmed = emailConfirmed;
+        this._isAdmin = isAdmin;
+        this._password = password;
+        this._mobilenumber = mobilenumber;
+        this._mfaEnabled = mfaEnabled;
+        this._secret_key = secret_key;
+        this._adress1 = adress1;
+        this._adress2 = adress2;
+        this._zipcode = zipcode;
+    }
+
+    public static Account GetAccount(string emailParam)
+    {
+        Account account = null;
+
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("select * from Accounts WHERE email = @email", conn);
+        cmd.Parameters.AddWithValue("@email", emailParam);
+        conn.Open();
+        SqlDataReader dr = cmd.ExecuteReader();
+        if (dr.Read())
+        {
+            account = new Account(
+                dr["Id"].ToString(),
+                dr["first_name"].ToString(),
+                dr["last_name"].ToString(),
+                dr["email"].ToString(),
+                bool.Parse(dr["emailConfirmed"].ToString()),
+                bool.Parse(dr["isAdmin"].ToString()),
+                dr["password"].ToString(),
+                dr["mobile_number"].ToString(),
+                bool.Parse(dr["multi_factor_enabled"].ToString()),
+                dr["secret_key"].ToString(),
+                dr["address1"].ToString(),
+                dr["address2"].ToString(),
+                dr["zipcode"].ToString()
+            );
+        }
+        else
+        {
+            account = null;
+        }
+        conn.Close();
+        dr.Close();
+        dr.Dispose();
+        return account;
+    }
 
     public static GridView GetAllUsers(GridView gridView)
     {
@@ -169,55 +259,3 @@ public class Clothes
         try
         {
             //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
-            string ToReturn = "";
-            string publickey = "12345678";
-            string secretkey = "87654321";
-            byte[] privatekeyByte = { };
-            privatekeyByte = Encoding.UTF8.GetBytes(secretkey);
-            byte[] publickeybyte = { };
-            publickeybyte = Encoding.UTF8.GetBytes(publickey);
-            MemoryStream ms = null;
-            CryptoStream cs = null;
-            byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
-            inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
-            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
-            {
-                ms = new MemoryStream();
-                cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
-                cs.Write(inputbyteArray, 0, inputbyteArray.Length);
-                cs.FlushFinalBlock();
-                Encoding encoding = Encoding.UTF8;
-                ToReturn = encoding.GetString(ms.ToArray());
-            }
-            return ToReturn;
-        }
-        catch (Exception ae)
-        {
-            throw new Exception(ae.Message, ae.InnerException);
-        }
-    }
-
-    public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3)
-    {
-        var data = Convert.FromBase64String(token);
-        var tokenCreationDate = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-        return tokenCreationDate < DateTime.UtcNow.AddDays(-tokenLifeSpanDays);
-    }
-
-    public static int GetDecryptedTokenEmailFromDataBase(string decryptedToken)
-    {
-        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
-
-        conn.Open();
-
-        string checkuser = "SELECT COUNT(*) FROM Accounts WHERE Email = @email";
-        SqlCommand com = new SqlCommand(checkuser, conn);
-        string email = Encoding.ASCII.GetString(Convert.FromBase64String(decryptedToken)).Substring(8);
-        com.Parameters.AddWithValue("@email", email);
-
-        int temp = Convert.ToInt32(com.ExecuteScalar().ToString());
-
-        conn.Close();
-        return temp;
-    }
-}
