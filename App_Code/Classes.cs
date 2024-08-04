@@ -789,4 +789,23 @@ public static void SetUserVerificationTrue(string email) {
       command.Parameters.AddWithValue("@pid", product_id);
       return Convert.ToInt32(command.ExecuteScalar().ToString()) == 0 ? false : true;
   }
+
+ public static string GetUserFullnameByAccountID(string account_id)
+ {
+
+     SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+     SqlCommand cmd = new SqlCommand("select * from Accounts WHERE id = @aid", conn);
+     cmd.Parameters.AddWithValue("@aid", account_id);
+     conn.Open();
+     SqlDataReader dr = cmd.ExecuteReader();
+     string name = "";
+     if (dr.Read())
+     {
+         name = dr["first_name"].ToString() + " " + dr["last_name"].ToString();
+     }
+     conn.Close();
+     dr.Close();
+     dr.Dispose();
+     return name;
+ }
 }
