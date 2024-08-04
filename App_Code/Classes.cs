@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
-
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -21,9 +20,6 @@ using System.Net.Mail;
 using AjaxControlToolkit.HtmlEditor.ToolbarButtons;
 using OtpNet;
 
-/// <summary>
-/// Summary description for Clothes
-/// </summary>
 public class Clothes
 {
     private string _id;
@@ -36,7 +32,6 @@ public class Clothes
     private string _link;
     private DateTime _dateAdded;
 
-    // GET / SET
     public string id { get { return _id; } }
     public string name { get { return _name; } set { _name = value; } }
     public int quantity { get { return _quantity; } set { _quantity = value; } }
@@ -63,7 +58,6 @@ public class Clothes
     public static Clothes getClothesID(string clothesID)
     {
         Clothes clothingObj;
-
         int quantity, category_id;
         string id, name, overview, link;
         decimal price;
@@ -103,9 +97,6 @@ public class Clothes
         return clothingObj;
     }
 
-    /// <summary>
-    /// Shopping Cart Object
-    /// </summary>
     public class Cart
     {
         public string item_name;
@@ -127,9 +118,6 @@ public class Clothes
     }
 }
 
-/// <summary>
-/// Account class for accounts table
-/// </summary>
 public class Account
 {
     private string _id;
@@ -146,7 +134,6 @@ public class Account
     private string _adress2;
     private string _zipcode;
 
-    // GET / SET
     public string id { get { return _id; } }
     public string firstname { get { return _firstname; } set { _firstname = value; } }
     public string lastname { get { return _lastname; } set { _lastname = value; } }
@@ -161,7 +148,6 @@ public class Account
     public string adress2 { get { return _adress2; } set { _adress2 = value; } }
     public string zipcode { get { return _zipcode; } set { _zipcode = value; } }
 
-    // Methods
     public Account(string id, string firstname, string lastname, string email, bool emailConfirmed, bool isAdmin, string password, string mobilenumber, bool mfaEnabled, string secret_key, string adress1, string adress2, string zipcode)
     {
         this._id = id;
@@ -206,10 +192,6 @@ public class Account
                 dr["zipcode"].ToString()
             );
         }
-        else
-        {
-            account = null;
-        }
         conn.Close();
         dr.Close();
         dr.Dispose();
@@ -230,6 +212,14 @@ public class SecretKeys
     public string ipify { get; set; }
 }
 
+public class ForgetPasswordTemplateData {
+    [JsonProperty("resetlink")]
+    public string resetlink { get; set; }
+
+    //[JsonProperty("name")]
+    //public string Name { get; set; }
+}
+ 
 public static GridView GetAllUsers(GridView gridView)
 {
     DataTable dt = new DataTable();
@@ -261,4 +251,9 @@ public static GridView GetAllUsers(GridView gridView)
                 gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
                 gridView.Rows[0].Cells[0].Text = "No Users in Database";
                 gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                gridView
+                gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
+            }
+        }
+    }
+    return gridView;
+}
