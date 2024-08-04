@@ -1026,4 +1026,34 @@ public static void SetUserVerificationTrue(string email) {
            }
        } catch (SqlException) { return null; }
    }
+
+    public static void RemoveUserVoid(String email)
+    {
+ 
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+            {
+                using (SqlCommand sql = new SqlCommand("DELETE Accounts where email = @id", connection))
+                {
+                    connection.Open();
+                    sql.Parameters.AddWithValue("@id", email);
+                    sql.ExecuteNonQuery();
+                }
+            }
+        
+    }
+
+    public static void RemoveUserVoid(String email)
+    {
+ 
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+            {
+                using (SqlCommand sql = new SqlCommand("DELETE Accounts where email = @id", connection))
+                {
+                    connection.Open();
+                    sql.Parameters.AddWithValue("@id", email);
+                    sql.ExecuteNonQuery();
+                }
+            }
+        
+    }
 }
