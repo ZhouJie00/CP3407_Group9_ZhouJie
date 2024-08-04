@@ -751,4 +751,32 @@ public static void SetUserVerificationTrue(string email) {
 
         return repeater;
     }
+
+  public static void UpdateUserInformation(string TextBox_Firstname, string TextBox_Lastname, string TextBox_MobileNumber, string TextBox_Address1, string TextBox_Address2, string TextBox_Zipcode,string email)
+  {
+      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+      conn.Open();
+
+      SqlCommand command = new SqlCommand("update Accounts set first_name = @fn, last_name = @ln, mobile_number = @mn, address1 = @ad1, address2 = @ad2, zipcode = @zc where email = @email", conn);
+      command.Parameters.AddWithValue("@fn", TextBox_Firstname);
+      command.Parameters.AddWithValue("@ln", TextBox_Lastname);
+      command.Parameters.AddWithValue("@mn", TextBox_MobileNumber);
+      command.Parameters.AddWithValue("@ad1", TextBox_Address1);
+      command.Parameters.AddWithValue("@ad2", TextBox_Address2);
+      command.Parameters.AddWithValue("@zc", TextBox_Zipcode);
+      command.Parameters.AddWithValue("@email", email);
+      command.ExecuteNonQuery();
+  }
+  public static void UpdateUserPassword(string email, string password)
+  {
+      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+      conn.Open();
+
+      SqlCommand command = new SqlCommand("update Accounts set password = @pw where email = @email", conn);
+      command.Parameters.AddWithValue("@email", email);
+      command.Parameters.AddWithValue("@pw", password);
+      command.ExecuteNonQuery();
+      conn.Close();
+  }
+
 }
