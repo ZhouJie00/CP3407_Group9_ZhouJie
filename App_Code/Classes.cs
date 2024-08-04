@@ -808,4 +808,100 @@ public static void SetUserVerificationTrue(string email) {
      dr.Dispose();
      return name;
  }
+
+    public static DataTable GetAverageRating(string product_id)
+    {
+        // SELECT ISNULL(AVG(Rating), 0) AverageRating, COUNT(Rating) " + "RatingCount FROM [RATINGS] WHERE Title = @booktitle
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        //return command.ExecuteScalar().ToString();
+        SqlDataAdapter dataAdapter = new SqlDataAdapter($"SELECT ISNULL(AVG(stars), 0) as averageRating FROM Ratings WHERE product_id = '{product_id}'", conn);
+        DataTable dt = new DataTable();
+        dataAdapter.Fill(dt);
+        return dt;
+    }
+    public static string GetAllReviewsCount(string product_id)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Ratings WHERE product_id = @pid", conn);
+        command.Parameters.AddWithValue("@pid", product_id);
+        return command.ExecuteScalar().ToString();
+    }
+    public static DataSet GetAllReviews(string product_id)
+    {
+
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("select * from Ratings WHERE product_id = @pid", conn);
+        cmd.Parameters.AddWithValue("@pid", product_id);
+
+        conn.Open();
+        SqlDataReader dr = cmd.ExecuteReader();
+
+        // Creating dataset, and all the columns name for the repeater
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+        ds.Tables.Add(dt);
+        dt.Columns.Add("name");
+        dt.Columns.Add("review");
+
+        while (dr.Read())
+        {
+            DataRow dataRow = dt.Rows.Add();
+            string name = GetUserFullnameByAccountID(dr["account_id"].ToString());
+            dataRow.SetField("name", name);
+            dataRow.SetField("review", dr["review"]);
+        }
+
+        conn.Close();
+        dr.Close();
+        dr.Dispose();
+        return ds;
+    }
+    public static void UpdateUserReview(string TextBox_ReviewDescription, string stars, string email, string id)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("UPDATE RATINGS SET review = @review, stars=@stars WHERE account_id = @aid AND product_id = @pid", conn);
+        //SqlDataAdapter sda = new SqlDataAdapter();
+        cmd.CommandType = CommandType.Text;
+        cmd.Parameters.AddWithValue("@review", TextBox_ReviewDescription);
+        cmd.Parameters.AddWithValue("@stars", stars);
+        cmd.Parameters.AddWithValue("@aid", Account.GetAccount(email.ToString()).id);
+        cmd.Parameters.AddWithValue("@pid", id);
+        conn.Open();
+        cmd.ExecuteNonQuery();
+        conn.Close();
+    }
+    public static void AddUserReview(string TextBox_ReviewDescription, string stars, string email, string id)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("INSERT INTO [RATINGS] (Id, account_id, product_id, stars, review) VALUES (@id, @ac_id, @pd_id, @stars,@review)", conn);
+        cmd.CommandType = CommandType.Text;
+        cmd.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+        cmd.Parameters.AddWithValue("@ac_id", Account.GetAccount(email).id);
+        cmd.Parameters.AddWithValue("@pd_id", id);
+        cmd.Parameters.AddWithValue("@stars", stars);
+        cmd.Parameters.AddWithValue("@review", TextBox_ReviewDescription);
+        conn.Open();
+        cmd.ExecuteNonQuery();
+        conn.Close();
+    }
+    public static string[] ShowAllRatings(string aid, string pid)
+    {
+        string[] ReturnValue = new string[2];
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        //SqlCommand command = new SqlCommand("SELECT review FROM Ratings WHERE account_id = 'a379c844-fa66-4103-958f-59cfc2424e23' AND product_id = '1db01a98-4f62-49dc-8fe5-0b789a89386a'", conn);
+        SqlCommand command = new SqlCommand("SELECT review, stars FROM Ratings WHERE account_id = @aid AND product_id = @pid", conn);
+        command.Parameters.AddWithValue("@aid", aid);
+        command.Parameters.AddWithValue("@pid", pid);
+        SqlDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            ReturnValue[0] = reader[0].ToString();
+            ReturnValue[1] = reader[1].ToString();
+        }
+        conn.Close();
+        return ReturnValue;
+    }
+
 }
