@@ -220,43 +220,6 @@ public class ForgetPasswordTemplateData {
     //public string Name { get; set; }
 }
  
-public static GridView GetAllUsers(GridView gridView)
-{
-    DataTable dt = new DataTable();
-    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
-    {
-        using (SqlCommand command = new SqlCommand("select * from Accounts", connection))
-        {
-            connection.Open();
-
-            using (SqlDataAdapter sql = new SqlDataAdapter())
-            {
-                sql.SelectCommand = command;
-
-                sql.Fill(dt);
-            }
-            if (dt.Rows.Count > 0)
-            {
-                gridView.DataSource = dt;
-                gridView.DataBind();
-                gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
-            }
-            else
-            {
-                dt.Rows.Add(dt.NewRow());
-                gridView.DataSource = dt;
-                gridView.DataBind();
-                gridView.Rows[0].Cells.Clear();
-                gridView.Rows[0].Cells.Add(new TableCell());
-                gridView.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
-                gridView.Rows[0].Cells[0].Text = "No Users in Database";
-                gridView.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                gridView.Rows[0].Cells[0].VerticalAlign = VerticalAlign.Middle;
-            }
-        }
-    }
-    return gridView;
-}
 
 public class Function {
     public static string GenerateRandomPassword(int size) {
@@ -270,4 +233,69 @@ public class Function {
         }
         return string.Join("", randomPassword);
     }
+   public static string DecryptEmailToken(string textToDecrypt) {
+       try {
+           //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
+           string ToReturn = "";
+           string publickey = "12345678";
+           string secretkey = "87654321";
+           byte[] privatekeyByte = { };
+           privatekeyByte = Encoding.UTF8.GetBytes(secretkey);
+           byte[] publickeybyte = { };
+           publickeybyte = Encoding.UTF8.GetBytes(publickey);
+           MemoryStream ms = null;
+           CryptoStream cs = null;
+           byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
+           inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
+           using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
+               ms = new MemoryStream();
+               cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
+               cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+               cs.FlushFinalBlock();
+               Encoding encoding = Encoding.UTF8;
+               ToReturn = encoding.GetString(ms.ToArray());
+           }
+           return ToReturn;
+       } catch (Exception ae) {
+           throw new Exception(ae.Message, ae.InnerException);
+       }
+   }
+   public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3) {
+       var data = Convert.FromBase64String(token);
+       var tokenCreationDate = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
+       return tokenCreationDate < DateTime.UtcNow.AddDays(-tokenLifeSpanDays);
+   }
+   public static string EncryptEmailToken(string textToEncrypt) {
+       try {
+           //string  = "WaterWorld";
+           string ToReturn = "";
+           string publickey = "12345678";
+           string secretkey = "87654321";
+           byte[] secretkeyByte = { };
+           secretkeyByte = Encoding.UTF8.GetBytes(secretkey);
+           byte[] publickeybyte = { };
+           publickeybyte = Encoding.UTF8.GetBytes(publickey);
+           MemoryStream ms = null;
+           CryptoStream cs = null;
+           byte[] inputbyteArray = Encoding.UTF8.GetBytes(textToEncrypt);
+           using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
+               ms = new MemoryStream();
+               cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+               cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+               cs.FlushFinalBlock();
+               ToReturn = Convert.ToBase64String(ms.ToArray());
+           }
+           return ToReturn;
+       } catch (Exception ex) {
+           throw new Exception(ex.Message, ex.InnerException);
+       }
+   }
+   public static string CreateEmailToken(byte[] arg) {
+       var time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+       var key = arg ?? Guid.NewGuid().ToByteArray();
+       var token = Convert.ToBase64String(time.Concat(key).ToArray());
+
+       return token;
+   }
+
 }
