@@ -518,4 +518,50 @@ public class Function {
         }
         conn.Close();
     }
+
+  public static void RegisterUser(string TextBox_Email, dynamic TextBox_Address1, dynamic TextBox_Address2, dynamic TextBox_Zipcode, string TextBox_FirstName, string TextBox_LastName, string TextBox_MobileNumber, string password)
+  {
+      using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+      {
+          sqlConnection.Open();
+          string query = "INSERT INTO accounts (Id, first_name, last_name, email, emailConfirmed, isAdmin, password, mobile_number, multi_factor_enabled, secret_key, address1, address2, zipcode) values (@id, @first, @last, @email, @emailConfirmed, @admin, @password, @mobile, @multi_factor_enabled, @secret_key, @address1, @address2, @zipcode)";
+          SqlCommand com = new SqlCommand(query, sqlConnection);
+          com.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+          com.Parameters.AddWithValue("@first", TextBox_FirstName);
+          com.Parameters.AddWithValue("@last", TextBox_LastName);
+          com.Parameters.AddWithValue("@email", TextBox_Email);
+          com.Parameters.AddWithValue("@emailConfirmed", false);
+          com.Parameters.AddWithValue("@admin", false);
+          com.Parameters.AddWithValue("@password", password);
+          com.Parameters.AddWithValue("@mobile", TextBox_MobileNumber);
+          com.Parameters.AddWithValue("@multi_factor_enabled", false);
+          com.Parameters.AddWithValue("@secret_key", DBNull.Value);
+          com.Parameters.AddWithValue("@address1", TextBox_Address1);
+          com.Parameters.AddWithValue("@address2", TextBox_Address2);
+          com.Parameters.AddWithValue("@zipcode", TextBox_Zipcode);
+          com.ExecuteNonQuery();
+      }
+  }
+  public static void SaveCountryToDatabase(string countryISO)
+  {
+      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+
+      conn.Open();
+      SqlCommand com = new SqlCommand($"SELECT COUNT(*) FROM countries WHERE country = '{countryISO}'", conn);
+
+      int countryexists = Convert.ToInt32(com.ExecuteScalar().ToString());
+      // If country exists update count else create new row
+      if (countryexists == 1)
+      {
+          com.CommandText = $"update Countries set count=count+1 where country='{countryISO}'";
+          com.ExecuteNonQuery();
+      }
+      else
+      {
+          com.CommandText = $"INSERT INTO countries (Id, country, count) values ('{Guid.NewGuid().ToString()}', '{countryISO}', 1)";
+          com.ExecuteNonQuery();
+      }
+      conn.Close();
+  }
+
 }
