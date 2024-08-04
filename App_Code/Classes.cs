@@ -778,5 +778,15 @@ public static void SetUserVerificationTrue(string email) {
       command.ExecuteNonQuery();
       conn.Close();
   }
+  public static bool UserAlreadyCreatedReview(string product_id, dynamic email)
+  {
+      if (email == null) return false;
 
+      SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+      conn.Open();
+      SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Ratings WHERE account_id = @aid AND product_id = @pid", conn);
+      command.Parameters.AddWithValue("@aid", Account.GetAccount(email.ToString()).id);
+      command.Parameters.AddWithValue("@pid", product_id);
+      return Convert.ToInt32(command.ExecuteScalar().ToString()) == 0 ? false : true;
+  }
 }
