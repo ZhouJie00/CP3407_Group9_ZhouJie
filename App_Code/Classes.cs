@@ -502,4 +502,20 @@ public class Function {
 
         conn.Close();
     }
+
+    public static void UpdateUserAddress(string TextBox_Email, string TextBox_Address1, string TextBox_Address2, string TextBox_Zipcode)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+        using (SqlCommand command = new SqlCommand("update [accounts] set address1=@addr1, address2=@addr2, zipcode=@zipcode WHERE email = @email", conn))
+        {
+            //checks if the email that the user has entered exists in the database table
+            command.Parameters.AddWithValue("email", TextBox_Email);
+            command.Parameters.AddWithValue("@addr1", TextBox_Address1);
+            command.Parameters.AddWithValue("@addr2", TextBox_Address2);
+            command.Parameters.AddWithValue("zipcode", TextBox_Zipcode);
+            command.ExecuteNonQuery();
+        }
+        conn.Close();
+    }
 }
