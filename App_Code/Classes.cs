@@ -254,8 +254,5 @@ public class Account
         return gridView;
     }
 
-    public static string DecryptEmailToken(string textToDecrypt)
-    {
-        try
-        {
-            //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
+ 
+}
