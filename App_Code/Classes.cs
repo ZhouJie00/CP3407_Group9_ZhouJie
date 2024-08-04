@@ -654,4 +654,15 @@ public class Function {
         return password;
 
     }
+
+public static void SetUserVerificationTrue(string email) {
+    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+    conn.Open();
+    SqlCommand cmd = new SqlCommand("update accounts set emailconfirmed = @verified where email = @email", conn);
+    cmd.Parameters.AddWithValue("@email", email);
+    cmd.Parameters.AddWithValue("@verified", true);
+    cmd.ExecuteNonQuery();
+    conn.Close();
+}
+
 }
