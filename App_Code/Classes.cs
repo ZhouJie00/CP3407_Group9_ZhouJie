@@ -337,4 +337,141 @@ public class Function {
       }
       return gridView;
   }
+
+   public static GridView AdminUpdateClothe(GridView gridView, int rowIndex) {
+       try
+       {
+           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+           {
+               using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+               {
+                   connection.Open();
+                   sql.Parameters.AddWithValue("@ACTION", "UPDATE");
+                   sql.CommandType = CommandType.StoredProcedure;
+                   sql.Parameters.AddWithValue("@id", gridView.DataKeys[rowIndex].Value.ToString());
+                   sql.Parameters.AddWithValue("@name", (gridView.Rows[rowIndex].FindControl("TextBox_name") as TextBox).Text.Trim());
+                   sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_quantity") as TextBox).Text.Trim()));
+                   sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.Rows[rowIndex].FindControl("TextBox_price") as TextBox).Text.Trim()));
+                   sql.Parameters.AddWithValue("@overview", (gridView.Rows[rowIndex].FindControl("TextBox_Overview") as TextBox).Text.Trim());
+                   sql.Parameters.AddWithValue("@gender", (gridView.Rows[rowIndex].FindControl("TextBox_gender") as TextBox).Text.Trim());
+                   sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.Rows[rowIndex].FindControl("TextBox_categoryID") as TextBox).Text.Trim()));
+                   sql.Parameters.AddWithValue("@link", (gridView.Rows[rowIndex].FindControl("TextBox_link") as TextBox).Text.Trim());
+                   //sql.Parameters.AddWithValue("@", );
+                   sql.ExecuteNonQuery();
+                   gridView.EditIndex = -1;
+                   //gridView = GetAllClothes(gridView);
+                   return gridView;
+               }
+           }
+       }
+       catch (SqlException)
+       {
+           return null;
+       }
+       catch (FormatException)
+       {
+           return null;
+       }
+   }
+   public static GridView AdminDeleteClothe(GridView gridView, int rowIndex, HttpServerUtility server)
+   {
+       try
+       {
+           using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+           {
+               using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+               {
+                   connection.Open();
+                   string id = gridView.DataKeys[rowIndex].Value.ToString();
+                   sql.Parameters.AddWithValue("@ACTION", "DELETE");
+                   sql.CommandType = CommandType.StoredProcedure;
+                   sql.Parameters.AddWithValue("@id", id);
+                   sql.ExecuteNonQuery();
+
+                   // Remove Directory
+                   DirectoryInfo di = new DirectoryInfo(server.MapPath(@"/assets/img/_clothing/carousel/" + id + "/"));
+                   foreach (FileInfo file in di.GetFiles())
+                   {
+                       file.Delete();
+                   }
+                   di.Delete();
+
+                   gridView = GetAllClothes(gridView);
+                   return gridView;
+               }
+           }
+       }
+       catch (SqlException) { return null; }
+   }
+   public static GridView AdminInsertClothing(GridView gridView, GridViewCommandEventArgs e, HttpServerUtility server) {
+       try
+       {
+           if (e.CommandName == "Add") {
+               using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+               {
+                   using (SqlCommand sql = new SqlCommand("Product_CRUD", connection))
+                   {
+                       connection.Open();
+                       sql.Parameters.AddWithValue("@ACTION", "INSERT");
+                       sql.CommandType = CommandType.StoredProcedure;
+                       string id = Guid.NewGuid().ToString();
+                       sql.Parameters.AddWithValue("@id", id);
+                       sql.Parameters.AddWithValue("@name", (gridView.HeaderRow.FindControl("Add_Name") as TextBox).Text.Trim());
+                       sql.Parameters.AddWithValue("@quantity", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_Quantity") as TextBox).Text.Trim()));
+                       sql.Parameters.AddWithValue("@price", Convert.ToDouble((gridView.HeaderRow.FindControl("Add_Price") as TextBox).Text.Trim()));
+                       sql.Parameters.AddWithValue("@overview", (gridView.HeaderRow.FindControl("Add_Overview") as TextBox).Text.Trim());
+                       sql.Parameters.AddWithValue("@gender", (gridView.HeaderRow.FindControl("Add_Gender") as TextBox).Text.Trim().ToUpper());
+                       sql.Parameters.AddWithValue("@category_id", Convert.ToInt32((gridView.HeaderRow.FindControl("Add_CategoryID") as TextBox).Text.Trim()));
+                       sql.Parameters.AddWithValue("@link", (gridView.HeaderRow.FindControl("Add_Link") as TextBox).Text.Trim());
+                       sql.Parameters.AddWithValue("@today", DateTime.Now);
+                       sql.ExecuteNonQuery();
+
+                       // Create directory for images
+                       string path = server.MapPath(@"/assets/img/_clothing/carousel/" + id);
+                       if (!Directory.Exists(path))
+                       {
+                           Directory.CreateDirectory(path);
+                       }
+
+                       // Save Images
+                       StringBuilder files = new StringBuilder();
+                       FileUpload images = (gridView.HeaderRow.FindControl("FileUpload_image") as FileUpload);
+                       try
+                       {
+                           if (images.HasFiles)
+                           {
+
+                               foreach (var image in images.PostedFiles)
+                               {
+
+                                   // Check if "1.jpg" exists, if not rename the image to it - Saving images
+                                   if (!System.IO.File.Exists(Path.Combine(path, "1.jpg"))) image.SaveAs(Path.Combine(path, "1.jpg"));
+                                   else image.SaveAs(Path.Combine(path, image.FileName));
+                               }
+                           }
+                       }
+                       catch (Exception err)
+                       {
+                           Debug.WriteLine(err);
+                           return null;
+                       }
+                       //return gridView;
+                       return GetAllClothes(gridView);
+                   }
+               }
+           }
+       }
+       catch (SqlException err)
+       {
+           Debug.WriteLine(err);
+           return null;
+       }
+       catch (FormatException err)
+       {
+           Debug.WriteLine(err);
+           return null;
+       }
+       return null;
+   }
+   
 }
