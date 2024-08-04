@@ -665,4 +665,55 @@ public static void SetUserVerificationTrue(string email) {
     conn.Close();
 }
 
+ public static DataSet GetMenTops() {
+     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+     {
+         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (5,6,7,8)", conn);
+         DataSet temp = new DataSet();
+         sql.Fill(temp);
+         return temp;
+     }
+ }
+ public static DataSet GetMenBottoms()
+ {
+     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+     {
+         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'M' and category_id in (1,2,3,4)", conn);
+         DataSet temp = new DataSet();
+         sql.Fill(temp);
+         return temp;
+     }
+ }
+ public static Repeater ProductListCategory(Repeater repeater, char gender, int category_id) {
+     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+     {
+         SqlDataAdapter sql = new SqlDataAdapter($"select * from Clothes where gender = '{gender}' and category_id in ({category_id})", conn);
+         DataSet temp = new DataSet();
+         sql.Fill(temp);
+         repeater.DataSource = temp;
+         repeater.DataBind();
+     }
+     return repeater;
+ }
+ public static DataSet GetWomenTops()
+ {
+     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+     {
+         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (11,12,13,7,8)", conn);
+         DataSet temp = new DataSet();
+         sql.Fill(temp);
+         return temp;
+     }
+ }
+ public static DataSet GetWomenBottoms()
+ {
+     using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+     {
+         SqlDataAdapter sql = new SqlDataAdapter("select * from Clothes where gender = 'F' and category_id in (2,9,3,4,10)", conn);
+         DataSet temp = new DataSet();
+         sql.Fill(temp);
+         return temp;
+     }
+ }
+
 }
