@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -24,7 +24,8 @@ using OtpNet;
 /// <summary>
 /// Summary description for Clothes
 /// </summary>
-public class Clothes {
+public class Clothes
+{
     private string _id;
     private string _name;
     private int _quantity;
@@ -45,7 +46,9 @@ public class Clothes {
     public int category_id { get { return _category_id; } set { _category_id = value; } }
     public string link { get { return _link; } }
     public DateTime DateAdded { get => _dateAdded; }
-    public Clothes(string id, string name, int quantity, decimal price, string overview, char gender, int category_id, string link, DateTime dateAdded) {
+
+    public Clothes(string id, string name, int quantity, decimal price, string overview, char gender, int category_id, string link, DateTime dateAdded)
+    {
         this._id = id;
         this._name = name;
         this._quantity = quantity;
@@ -57,6 +60,48 @@ public class Clothes {
         this._dateAdded = dateAdded;
     }
 
+    public static Clothes getClothesID(string clothesID)
+    {
+        Clothes clothingObj;
+
+        int quantity, category_id;
+        string id, name, overview, link;
+        decimal price;
+        char gender;
+        DateTime dateAdded;
+
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("select * from Clothes WHERE ID = @cid", conn);
+        cmd.Parameters.AddWithValue("@cid", clothesID);
+
+        conn.Open();
+        SqlDataReader dr = cmd.ExecuteReader();
+
+        if (dr.Read())
+        {
+            id = dr["Id"].ToString();
+            name = dr["name"].ToString();
+            quantity = int.Parse(dr["quantity"].ToString());
+            price = decimal.Parse(dr["price"].ToString());
+            overview = dr["overview"].ToString();
+            gender = char.Parse(dr["gender"].ToString());
+            category_id = int.Parse(dr["category_id"].ToString());
+            link = dr["link"].ToString();
+            dateAdded = DateTime.Parse(dr["dateAdded"].ToString());
+
+            clothingObj = new Clothes(id, name, quantity, price, overview, gender, category_id, link, dateAdded);
+        }
+        else
+        {
+            clothingObj = null;
+        }
+
+        conn.Close();
+        dr.Close();
+        dr.Dispose();
+
+        return clothingObj;
+    }
 
     public static GridView GetAllUsers(GridView gridView)
     {
@@ -78,7 +123,8 @@ public class Clothes {
                     gridView.DataSource = dt;
                     gridView.DataBind();
                     gridView.HeaderRow.TableSection = TableRowSection.TableHeader;
-                } else
+                }
+                else
                 {
                     dt.Rows.Add(dt.NewRow());
                     gridView.DataSource = dt;
@@ -95,8 +141,10 @@ public class Clothes {
         return gridView;
     }
 
-    public static string DecryptEmailToken(string textToDecrypt) {
-        try {
+    public static string DecryptEmailToken(string textToDecrypt)
+    {
+        try
+        {
             //string  = "6+PXxVWlBqcUnIdqsMyUHA==";
             string ToReturn = "";
             string publickey = "12345678";
@@ -109,7 +157,8 @@ public class Clothes {
             CryptoStream cs = null;
             byte[] inputbyteArray = new byte[textToDecrypt.Replace(" ", "+").Length];
             inputbyteArray = Convert.FromBase64String(textToDecrypt.Replace(" ", "+"));
-            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider()) {
+            using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
+            {
                 ms = new MemoryStream();
                 cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
                 cs.Write(inputbyteArray, 0, inputbyteArray.Length);
@@ -118,12 +167,15 @@ public class Clothes {
                 ToReturn = encoding.GetString(ms.ToArray());
             }
             return ToReturn;
-        } catch (Exception ae) {
+        }
+        catch (Exception ae)
+        {
             throw new Exception(ae.Message, ae.InnerException);
         }
     }
 
-    public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3) {
+    public static bool HasEmailTokenExpired(string token, int tokenLifeSpanDays = 3)
+    {
         var data = Convert.FromBase64String(token);
         var tokenCreationDate = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
         return tokenCreationDate < DateTime.UtcNow.AddDays(-tokenLifeSpanDays);
@@ -145,7 +197,4 @@ public class Clothes {
         conn.Close();
         return temp;
     }
-
-
- 
 }
