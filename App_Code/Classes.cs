@@ -490,4 +490,16 @@ public class Function {
         conn.Close();
         return temp;
     }
+    public static void ChangeUserPasswordDB(string email, string password)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        conn.Open();
+
+        SqlCommand command = new SqlCommand("update Accounts set password = @pass where email = @email", conn);
+        command.Parameters.AddWithValue("@pass", password);
+        command.Parameters.AddWithValue("@email", email);
+        command.ExecuteNonQuery();
+
+        conn.Close();
+    }
 }
