@@ -12,18 +12,22 @@ namespace AWAD_Assignment.routes
     {
         protected void Page_Load(object sender, EventArgs e)
         {
- 
+            RepeaterHistory.DataSource = Function.GetOrderHistory(Account.GetAccount(Session["email"].ToString()).id);
+            RepeaterHistory.DataBind();
 
         }
 
-        protected void RepeaterHistory_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
- 
-        }
 
         protected void RepeaterHistoryChild_DataBinding(object sender, EventArgs e)
         {
- 
+            Repeater rep = (Repeater)(sender);
+
+            string order_id = (string)(Eval("Id"));
+
+            // Assuming you have a function call `GetSomeData` that will return
+            // the data you want to bind to your child repeater.
+            rep.DataSource = Function.GetPurchaseHistory(order_id);
+            rep.DataBind();
         }
     }
 }
