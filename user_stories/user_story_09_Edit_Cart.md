@@ -13,7 +13,8 @@ Allow users to change the quantity or remove products
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to manage their cart by adjusting product quantities or removing items.
+
 ## Description:  
 The shopping cart interface allows users to edit the quantity of products directly. Users can change the number of items by adjusting the quantity field for each product. If the quantity is set to zero, the product will be removed from the cart automatically. This feature provides users with a simple way to manage their purchases and ensure their cart reflects their current buying intentions.
 

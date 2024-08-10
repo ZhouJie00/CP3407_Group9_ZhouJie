@@ -13,7 +13,8 @@ Users can leave stars for a product.
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to add an additional layer of security to their accounts.
+
 ## Description:  
 The security settings interface allows users to enhance their account security by enabling two-factor authentication (2FA) using Google Authenticator. Users can activate 2FA by clicking the "Enable" button in the Security Settings section. Upon activation, a QR code is displayed, which users can scan with the Google Authenticator app on their mobile device to link their account. Once linked, the app will generate a time-based one-time password (TOTP) that users must enter each time they log in, in addition to their regular password. This OTP field is presented during login, ensuring that only users with access to the Google Authenticator app can gain entry to the account. Users have the option to disable 2FA at any time if needed. By implementing 2FA with Google Authenticator, users add an additional layer of security, making it significantly harder for unauthorized parties to access their accounts.
 

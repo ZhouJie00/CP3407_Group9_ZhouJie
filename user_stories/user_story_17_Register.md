@@ -13,7 +13,8 @@ Users can leave stars for a product.
  
 
 ## Assumptions (if any):
-N/A
+Assume new users want to create an account with required personal information.
+
 ## Description:  
 The registration interface allows new users to create an account on the platform by filling out a registration form with their personal information. Users are required to enter their first name, last name, email address, mobile number, and a password, which they must confirm by entering it again. This ensures that the user’s account is protected with a strong, accurate password. Once all fields are completed, users can click the "Register" button to submit their information. If an account already exists, users can easily switch to the login page by clicking the "Login" button in the prompt provided. This streamlined registration process ensures a seamless onboarding experience for new users while maintaining security and accuracy in user data.
 

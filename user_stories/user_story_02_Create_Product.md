@@ -13,7 +13,8 @@ Create a product
  
 
 ## Assumptions (if any):
-N/A
+Assume administrators want to create and manage new product entries.
+
 ## Description:  
 The product management interface allows administrators to create new products by entering various details in the respective fields. Administrators can input the product name, quantity, and price to define the product's basic details. A brief overview can be added to describe the product's features and benefits for customers. Administrators must select the appropriate category ID to ensure the product is correctly classified, and they can tag the product for a specific gender, such as male, female, or unisex, to facilitate targeted browsing. A URL link can be included to provide additional information or external references. Images of the product can be uploaded by selecting files from the administrator's device. Once all details are entered, administrators can choose to save the new product or cancel the operation if necessary.
 ## Tasks, see chapter 4.

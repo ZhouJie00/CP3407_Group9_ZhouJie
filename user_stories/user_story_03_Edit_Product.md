@@ -13,7 +13,7 @@ Create a product
  
 
 ## Assumptions (if any):
-N/A
+Assume administrators want to update existing product details in the inventory.
 ## Description:  
 The product management interface allows administrators to efficiently edit existing products in the online shop's inventory. Administrators can update product details by entering the product name, quantity, and price in the respective fields. They can also edit the product's overview to provide customers with information about its features and benefits. Selecting the appropriate category ID is crucial for correctly classifying the product. Products can be tagged for a specific gender, such as male, female, or unisex, to assist with targeted browsing. Administrators can enter a URL link associated with the product for additional information or external references and upload product images by selecting files from their device. Once the details are filled out, administrators have the option to save the changes or cancel the operation if needed.
 ## Tasks, see chapter 4.

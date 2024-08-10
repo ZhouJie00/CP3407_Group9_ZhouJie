@@ -13,7 +13,7 @@ Allow user to view and change their person information
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to view and update their personal and shipping information securely.
 ## Description:  
 The "My Account" interface allows users to view and update their personal and shipping information. Users can manage their personal details, such as first name, last name, and contact number, and update their password securely. Additionally, users can edit their shipping address information, ensuring their account reflects the most up-to-date details. All changes are updated in real-time, providing a seamless and secure experience for managing account information.
 ## Tasks, see chapter 4.

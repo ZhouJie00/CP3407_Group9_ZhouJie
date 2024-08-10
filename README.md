@@ -12,7 +12,6 @@ This a project assignment template for CP3407.
 
 # *General* project planning BEFORE iteration-1 
 
-Total: 21 days
 
 ### Iteration 1 [3 weeks], [June 7 2024 - June 28,2024]
 
@@ -58,16 +57,19 @@ N/A
 
 
 # Important File Location:
-1. /App_Code
-2. /routes
-3. /UnitTestProject1/UnitTest1.cs
-4. /sql_schema_script.sql
-
+Class files: /App_Code<br/>
+Code files: /routes<br/>
+Test file: /UnitTestProject1/UnitTest1.cs <br/>
+Schema: /sql_schema_script.sql <br/>
+Documentation: /
 # Finding Hidden folders:
-
 If the files can't be seen, please use the following methods:
 
-1. Click on the "show all files"<br/>
-![alt text](user_stories/pictures/find_all_files1.png)
-1. Find from the file explorer 
-![alt text](user_stories/pictures/find_all_files2.png)
+=
+1.[Click on the "show all files](user_stories/pictures/find_all_files1.png)<br/>
+
+![alt text](user_stories/pictures/find_all_files1.png)<br/>
+1.[Find from the file explorer ](user_stories/pictures/find_all_files1.png)<br/>
+![alt text](user_stories/pictures/find_all_files2.png)<br/>
+
+# End of readme

@@ -13,7 +13,7 @@ User can view their currently cart
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to view and manage the products currently in their shopping cart.
 ## Description:  
 The shopping cart allows users to view and manage the products they have added to their cart. It displays each product along with its image, name, price, quantity, and total cost, providing users with a clear overview of their selected items. Users can adjust the quantity of each product directly within the cart and update it to reflect these changes. The interface also shows the subtotal of all items, helping users keep track of their spending. Once users have reviewed their selections, they can proceed to checkout by clicking the "Proceed to Checkout" button, allowing them to complete their purchase.
 ## Tasks, see chapter 4.

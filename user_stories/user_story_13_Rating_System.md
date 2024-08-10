@@ -13,7 +13,7 @@ Users can leave stars for a product.
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to rate products to provide feedback and view the average rating.
 ## Description:  
 The product details interface includes a star rating system that allows users to rate products based on their experiences. Users can leave a star rating out of five, providing valuable feedback for other customers. The overall rating of the product is dynamically calculated based on the cumulative ratings provided by users, meaning the more ratings a product receives, the more accurate the average rating becomes.  
 

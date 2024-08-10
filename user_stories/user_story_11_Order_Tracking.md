@@ -13,7 +13,8 @@ Users can track the status of their orders
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to track the status and details of their orders after purchase.
+
 ## Description:  
 The order confirmation interface allows users to track the status of their orders after a purchase has been completed. The interface displays essential order information, including the order number, date, total amount, and payment method used. Additionally, users can view their shipping address details, ensuring accuracy in delivery. The order details section lists each product included in the order, along with quantities, subtotals, and shipping costs. This comprehensive overview provides users with all the necessary information to track and verify their order status, offering reassurance and transparency throughout the purchasing process.
 ## Tasks, see chapter 4.

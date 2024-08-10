@@ -13,7 +13,7 @@ User can pay in different ways.
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to pay using various methods during checkout.
 ## Description:  
 The checkout process provides users with the flexibility to pay for their orders using different payment methods. After reviewing their shopping cart, users proceed to the checkout interface, where they can enter their shipping details, including name, address, and contact information. The order summary is displayed on the right side, showing the product, subtotal, shipping cost, and total amount due. Users have the option to choose between different payment methods, such as credit/debit card or PayPal. The integration with Stripe API provides a secure and user-friendly template for entering payment information. Users can fill in their card details, including card number, expiration date, and cardholder name, or use alternative payment options like Google Pay for a seamless transaction experience. After verifying the information, users can complete their purchase by clicking the "Pay" button, ensuring a secure and efficient payment process.
 

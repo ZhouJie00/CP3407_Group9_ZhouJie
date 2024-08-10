@@ -13,7 +13,8 @@ Allow users to add products to their virtual shopping cart
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to easily add products to their virtual shopping cart from the product details page.
+
 ## Description:  
 The product details page, which doubles as the add-to-cart page, allows users to easily add products to their virtual shopping cart. This interface provides comprehensive information about the selected product, including a large, detailed image to give users a clear view of the item. The page displays the product name, price, and a brief description of its features. Users can customize their purchase by selecting options such as size and color from dropdown menus and specifying the desired quantity. Once the selections are made, users can click the "Add to Cart" button to add the product to their shopping cart for later checkout. By combining product browsing and cart addition, this page streamlines the shopping experience into a single, seamless interface.
 

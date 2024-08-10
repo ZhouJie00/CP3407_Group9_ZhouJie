@@ -13,7 +13,8 @@ Users can leave stars for a product.
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to provide feedback on products through written reviews.
+
 ## Description:  
 The product details interface enables users to leave written reviews for products. Users can write a review in the provided text box and submit it by clicking the "Submit Review" button. Once submitted, reviews are displayed below the review section, allowing other customers to read feedback from previous buyers. 
 

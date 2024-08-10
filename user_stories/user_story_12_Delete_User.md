@@ -13,7 +13,8 @@ Allow administrator to delete user accounts.
  
 
 ## Assumptions (if any):
-N/A
+Assume administrators want to manage user accounts by deleting them when necessary.
+
 ## Description:  
 The user management interface allows administrators to view and manage user accounts effectively. It displays a list of users, including details such as name, email, admin status, and mobile number. Administrators have the ability to delete user accounts directly from this interface. Each user entry includes a delete icon (represented by a trash bin) that administrators can click to remove the user from the system. 
 ## Tasks, see chapter 4.

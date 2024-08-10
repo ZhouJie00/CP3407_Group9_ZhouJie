@@ -13,7 +13,8 @@ Allow user to login and logout
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to log in and log out securely.
+
 ## Description: 
 Description:
 

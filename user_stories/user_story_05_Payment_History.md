@@ -13,7 +13,7 @@ Allow the user to see their previous purchase products
  
 
 ## Assumptions (if any):
-N/A
+Assume users want to view and track their previous purchase history.
 ## Description:  
 The "View Purchase History" interface displays a list of past purchases, allowing users to track and reference specific transactions using each order's unique identifier. For each order, the total purchase amount is displayed, helping users keep track of their spending. Additionally, each entry shows the date and time of the purchase, providing a clear timeline of past orders.
 

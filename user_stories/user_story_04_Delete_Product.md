@@ -13,7 +13,7 @@ Delete a product
  
 
 ## Assumptions (if any):
-N/A
+Assume administrators want to remove products from the inventory when necessary.
 ## Description:  
 The product management interface allows administrators to manage the inventory by deleting products from the online shop. Administrators can delete a selected entry by clicking the delete icon, which will remove the product from the inventory.
  

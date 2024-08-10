@@ -1,4 +1,4 @@
-# Actual iteration-2 board, [July 21, 2024 - August 10, 2024]
+# Actual iteration-3 board, [July 21, 2024 - August 10, 2024]
 
  
 * Assumed Velocity FROM iteration-3: 0.71

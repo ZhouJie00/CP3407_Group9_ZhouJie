@@ -13,7 +13,8 @@ Users can reset their password
  
 
 ## Assumptions (if any):
-N/A
+Assume users need a secure method to regain access if they forget their password.
+
 ## Description:  
 The password reset feature allows users to securely regain access to their accounts if they forget their password. Users can initiate the password reset process by entering their registered email address in the provided field on the "Forget Password" page and clicking the "FORGET PASSWORD" button. Upon submission, an email is sent to the user’s email address containing a "reset password" link. By clicking this link, users are directed to a secure page where they can set a new password for their account. This process ensures that only authorized users can reset their passwords, maintaining the security and integrity of user accounts.
 
