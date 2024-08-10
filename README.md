@@ -69,7 +69,12 @@ N/A
 <span style="color: red">Code files: /routes</span><br/>
 <span style="color: red">Test file: /UnitTestProject1/UnitTest1.cs</span> <br/>
 <span style="color: red">Schema: /sql_schema_script.sql</span> <br/>
-<span style="color: red">Documentation: /</span>
+<span style="color: red">Documentation: /</span><br/><br/>
+For the /Routes: <br/>
+<span style="color: red">.aspx.aspx contain the frontend codes</span> <br/>
+<span style="color: red">.aspx.cs contain the backend codes</span> <br/>
+<span style="color: red">.aspx.designer.cs contain the website's system code</span> <br/>
+
 # Finding Hidden folders:
 If the files can't be seen, please use the following methods:
 
