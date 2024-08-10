@@ -37,15 +37,22 @@ Total: 21 days
 Total: 21 days
 
 ### Iteration 3 [about 3 weeks], [July 21, 2024 - August 10, 2024]
-1. [Iteration-1](./iteration_1.md)
-2. [Iteration-2](./iteration_2.md)
-2. [Iteration-3](./iteration_3.md)
+1. [Edit product](./user_stories/user_story_03_Edit_Product.md), priority 40, 7 days
+2. [Delete a user](./user_stories/user_story_12_Delete_User.md), priority 50, 3 days
+3. [Payment history](./user_stories/user_story_05_Payment_History.md), priority 50, 6 days
+4. [Two-factor authentication](./user_stories/user_story_16_TwoFactor.md), priority 50, 1 days
+5. [Register](./user_stories/user_story_17_Register.md), priority 50, 2 days
+
 
 Total: 19 days
 
 ### Not enough time/developers: 
 N/A
 
+# Actual iterations
+1. [Iteration-1](./iteration_1.md)
+2. [Iteration-2](./iteration_2.md)
+2. [Iteration-3](./iteration_3.md)
 
 # New UML diagram:
 1.[UML](user_stories/pictures/new_UML1.png)<br/>
@@ -55,17 +62,18 @@ N/A
 1.[Class diagram](user_stories/pictures/new_Class_Diagram.png)
 ![alt text](user_stories/pictures/new_Class_Diagram.png)
 
-
 # Important File Location:
-Class files: /App_Code<br/>
-Code files: /routes<br/>
-Test file: /UnitTestProject1/UnitTest1.cs <br/>
-Schema: /sql_schema_script.sql <br/>
-Documentation: /
+<span style="color: red">  </span>
+
+<span style="color: red"> Class files: /App_Code</span><br/>
+<span style="color: red">Code files: /routes</span><br/>
+<span style="color: red">Test file: /UnitTestProject1/UnitTest1.cs</span> <br/>
+<span style="color: red">Schema: /sql_schema_script.sql</span> <br/>
+<span style="color: red">Documentation: /</span>
 # Finding Hidden folders:
 If the files can't be seen, please use the following methods:
 
-=
+ 
 1.[Click on the "show all files](user_stories/pictures/find_all_files1.png)<br/>
 
 ![alt text](user_stories/pictures/find_all_files1.png)<br/>

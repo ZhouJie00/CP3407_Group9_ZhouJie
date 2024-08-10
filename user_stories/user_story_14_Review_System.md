@@ -1,15 +1,15 @@
 Create more md files like this one as needed. Place them into the same folder 
 as this [user_stories folder](./)
 
-# Title: Rating System
+# Title: Review System
 
-Users can leave stars for a product. 
+Users can leave review for a product. 
 
 ## Priority: 20
  
 
-## Estimation: 2
-* Zhou Jie: 2 days
+## Estimation: 5
+* Zhou Jie: 5 days
  
 
 ## Assumptions (if any):
