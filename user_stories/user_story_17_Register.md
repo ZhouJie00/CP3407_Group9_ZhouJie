@@ -1,9 +1,9 @@
 Create more md files like this one as needed. Place them into the same folder 
 as this [user_stories folder](./)
 
-# Title: Two Factor Authentication
+# Title: Register
 
-Users can leave stars for a product. 
+Users register an account.
 
 ## Priority: 50
  
