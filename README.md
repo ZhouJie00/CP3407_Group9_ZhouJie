@@ -75,9 +75,8 @@ If the files can't be seen, please use the following methods:
 
  
 1.[Click on the "show all files](user_stories/pictures/find_all_files1.png)<br/>
-
 ![alt text](user_stories/pictures/find_all_files1.png)<br/>
-1.[Find from the file explorer ](user_stories/pictures/find_all_files1.png)<br/>
+1.[Find from the file explorer ](user_stories/pictures/find_all_files2.png)<br/>
 ![alt text](user_stories/pictures/find_all_files2.png)<br/>
 
 # End of readme

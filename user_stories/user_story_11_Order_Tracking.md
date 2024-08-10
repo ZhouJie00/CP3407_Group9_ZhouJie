@@ -33,12 +33,12 @@ Task 4: Implement logic to update and track the status of orders in the database
 
 
  
-
 # UI Design:
-![alt text](pictures/OrderTracking1.png)
- 
+![alt text](pictures/productDetail1.png)
+1.[[Product Detail Image](pictures/productDetail1.png)<br/>
+
 
 
 # Completed:
-![alt text](pictures/OrderTracking1.png)
- 
+![alt text](pictures/productDetail1.png)
+1.[Product Detail Image](pictures/productDetail1.png)<br/>
