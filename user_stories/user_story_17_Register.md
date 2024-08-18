@@ -49,4 +49,5 @@ Task 7: Develop logic to check for existing accounts and handle cases where the 
 
 # Completed:
 ![alt text](pictures/register1.png)
+![alt text](pictures/register2.png)
  
